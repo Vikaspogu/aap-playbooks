@@ -24,8 +24,8 @@
           loop: 
             - {target: 1.1.1.1, verify: cloudflare-dns.com } 
             - {target: 1.0.0.1, verify: cloudflare-dns.com } 
-            - {target: 2606:4700:4700::1111, verify: cloudflare-dns.com } 
-            - {target: 2606:4700:4700::1001, verify: cloudflare-dns.com } 
+            - {target: "2606:4700:4700::1111", verify: cloudflare-dns.com } 
+            - {target: "2606:4700:4700::1001", verify: cloudflare-dns.com } 
 
     - name: Alias setup
       block:
