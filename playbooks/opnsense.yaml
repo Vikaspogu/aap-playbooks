@@ -1,0 +1,78 @@
+---
+- hosts: router
+  gather_facts: false
+  any_errors_fatal: true
+  module_defaults:
+  group/ansibleguy.opnsense.all:
+    firewall: 'opnsense.template.ansibleguy.net'
+    api_credential_file: '/home/runner/.config/opn.key'
+  tasks:
+    - name: Unbound setup
+      block:
+        - name: Adding
+          ansibleguy.opnsense.unbound_forward:
+            domain: '{{unbound.forwarding.domain}}'
+            target: '{{unbound.forwarding.ip}}'
+
+        - name: Setup DNS over TLS
+          ansibleguy.opnsense.unbound_dot:
+            target: '{{ item.target }}'
+            port: 853
+            verify: '{{ item.verify }}'
+            state: 'present'
+            enabled: true
+          loop: 
+            - {target: 1.1.1.1, verify: cloudflare-dns.com } 
+            - {target: 1.0.0.1, verify: cloudflare-dns.com } 
+            - {target: 2606:4700:4700::1111, verify: cloudflare-dns.com } 
+            - {target: 2606:4700:4700::1001, verify: cloudflare-dns.com } 
+
+    - name: Alias setup
+      block:
+        - name: Get cloudflare IP's from URI
+          ansibleguy.opnsense.alias:
+            name: 'cloudflare_ips'
+            description: 'Cloudfare IPs'
+            type: url
+            content: 'https://www.cloudfare.com/ips-v4'
+            state: 'present'
+
+        - name: Plex IP
+          ansibleguy.opnsense.alias:
+            name: 'plex_ip'
+            content: '{{ plex.ip }}'
+
+        - name: Plex Port
+          ansibleguy.opnsense.alias:
+            name: 'plex_port'
+            content: '{{ plex.port }}'
+
+        - name: HASS IoT Devices
+          ansibleguy.opnsense.alias:
+            name: 'hass_iot_devices'
+            content: '{{ hass_ips }}'
+
+        - name: Canon Printer IP
+          ansibleguy.opnsense.alias:
+            name: 'canon_printer'
+            content: '{{ canon_printer }}'
+
+        - name: NAS IP
+          ansibleguy.opnsense.alias:
+            name: 'nas_ip'
+            content: '{{ nas_ip }}'
+    - name: 
+      block:
+        - name: Installing - multiple packages at once
+          ansibleguy.opnsense.package:
+            name: ['os-theme-rebellion', 'os-frr', 'os-haproxy']
+            action: 'install'
+
+  handlers:
+    - name: Reload alias
+      ansibleguy.opnsense.reload:
+        target: 'alias'
+
+    - name: Reload unbound
+      ansibleguy.opnsense.reload:
+        target: 'unbound'
