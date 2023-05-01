@@ -1,18 +1,18 @@
----
-- hosts: all
+- name: OPNSense Configuration
+  hosts: all
   gather_facts: false
   any_errors_fatal: true
   module_defaults:
-  group/ansibleguy.opnsense.all:
-    firewall: 'opnsense.template.ansibleguy.net'
-    api_credential_file: '/home/runner/.config/opn.key'
+    group/ansibleguy.opnsense.all:
+      firewall: 'opnsense.template.ansibleguy.net'
+      api_credential_file: '/home/runner/.config/opn.key'
   tasks:
     - name: Unbound setup
       block:
         - name: Adding
           ansibleguy.opnsense.unbound_forward:
-            domain: '{{unbound.forwarding.domain}}'
-            target: '{{unbound.forwarding.ip}}'
+            domain: "{{unbound.forwarding.domain}}"
+            target: "{{unbound.forwarding.ip}}"
 
         - name: Setup DNS over TLS
           ansibleguy.opnsense.unbound_dot:
