@@ -1,5 +1,5 @@
 ---
-- hosts: router
+- hosts: all
   gather_facts: false
   any_errors_fatal: true
   module_defaults:
