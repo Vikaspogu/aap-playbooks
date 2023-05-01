@@ -1,3 +1,4 @@
+---
 - name: OPNSense Configuration
   hosts: all
   gather_facts: false
@@ -8,6 +9,8 @@
       api_credential_file: '/home/runner/.config/opn.key'
   tasks:
     - name: Unbound setup
+      notify:
+        - Reload unbound
       block:
         - name: Adding
           ansibleguy.opnsense.unbound_forward:
@@ -28,6 +31,8 @@
             - {target: "2606:4700:4700::1001", verify: cloudflare-dns.com } 
 
     - name: Alias setup
+      notify:
+        - Reload alias
       block:
         - name: Get cloudflare IP's from URI
           ansibleguy.opnsense.alias:
@@ -61,13 +66,14 @@
           ansibleguy.opnsense.alias:
             name: 'nas_ip'
             content: '{{ nas_ip }}'
+
     - name: 
       block:
         - name: Installing - multiple packages at once
           ansibleguy.opnsense.package:
             name: ['os-theme-rebellion', 'os-frr', 'os-haproxy']
             action: 'install'
-
+  
   handlers:
     - name: Reload alias
       ansibleguy.opnsense.reload:
