@@ -1,12 +1,17 @@
 ---
 - name: OPNSense Configuration
   hosts: all
-  gather_facts: false
-  any_errors_fatal: true
+  gather_facts: no
   module_defaults:
     group/ansibleguy.opnsense.all:
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn.key'
+      
+    ansibleguy.opnsense.unbound_domain:
+      match_fields: ['description']
+
+    ansibleguy.opnsense.list:
+      target: 'unbound_domain'
   tasks:
     - name: Unbound setup
       notify:
@@ -76,9 +81,11 @@
   
   handlers:
     - name: Reload alias
-      ansibleguy.opnsense.reload:
-        target: 'alias'
+      ansibleguy.opnsense.service:
+        name: 'alias'
+        action: 'restart'
 
     - name: Reload unbound
-      ansibleguy.opnsense.reload:
-        target: 'unbound'
+      ansibleguy.opnsense.service:
+        name: 'alias'
+        action: 'unbound'
