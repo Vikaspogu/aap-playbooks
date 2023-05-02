@@ -6,6 +6,7 @@
     group/ansibleguy.opnsense.all:
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn.key'
+      ssl_verify: false
   vars_files:
     - ../vars/router.yml
   tasks:
