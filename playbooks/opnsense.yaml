@@ -1,6 +1,6 @@
 ---
 - name: OPNSense Configuration
-  hosts: all
+  hosts: router
   gather_facts: no
   module_defaults:
     group/ansibleguy.opnsense.all:
