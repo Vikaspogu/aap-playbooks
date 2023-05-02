@@ -1,11 +1,13 @@
 ---
 - name: OPNSense Configuration
   hosts: router
-  gather_facts: no
+  gather_facts: false
   module_defaults:
     group/ansibleguy.opnsense.all:
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn.key'
+  vars_files:
+    - ../vars/router.yml
   tasks:
     - name: Unbound setup
       notify:
