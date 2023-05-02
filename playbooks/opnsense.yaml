@@ -14,8 +14,6 @@
       target: 'unbound_domain'
   tasks:
     - name: Unbound setup
-      notify:
-        - Reload unbound
       block:
         - name: Adding
           ansibleguy.opnsense.unbound_forward:
@@ -36,8 +34,6 @@
             - {target: "2606:4700:4700::1001", verify: cloudflare-dns.com } 
 
     - name: Alias setup
-      notify:
-        - Reload alias
       block:
         - name: Get cloudflare IP's from URI
           ansibleguy.opnsense.alias:
