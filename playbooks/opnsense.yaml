@@ -79,11 +79,4 @@
             name: ['os-theme-rebellion', 'os-frr', 'os-haproxy']
             action: 'install'
   
-  handlers:
-    - name: Reload alias
-      ansibleguy.opnsense.reload:
-        target:  'alias'
 
-    - name: Reload unbound
-      ansibleguy.opnsense.reload:
-        target:  'alias'
