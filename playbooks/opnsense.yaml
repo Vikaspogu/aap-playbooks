@@ -7,6 +7,8 @@
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn/opn.key'
       ssl_verify: false
+    ansibleguy.opnsense.list:
+      target: 'unbound_forward'
   vars_files:
     - ../vars/router.yml
   tasks:
