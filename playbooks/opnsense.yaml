@@ -6,12 +6,6 @@
     group/ansibleguy.opnsense.all:
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn.key'
-
-    ansibleguy.opnsense.unbound_domain:
-      match_fields: ['description']
-
-    ansibleguy.opnsense.list:
-      target: 'unbound_domain'
   tasks:
     - name: Unbound setup
       notify:
