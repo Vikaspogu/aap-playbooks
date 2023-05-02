@@ -13,8 +13,8 @@
       block:
         - name: Adding
           ansibleguy.opnsense.unbound_forward:
-            domain: "{{unbound.forwarding.domain}}"
-            target: "{{unbound.forwarding.ip}}"
+            domain: '{{ unbound.forwarding.domain }}'
+            target: '{{ unbound.forwarding.ip }}'
 
         - name: Setup DNS over TLS
           ansibleguy.opnsense.unbound_dot:
