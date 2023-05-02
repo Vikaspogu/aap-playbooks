@@ -6,7 +6,7 @@
     group/ansibleguy.opnsense.all:
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn.key'
-      
+
     ansibleguy.opnsense.unbound_domain:
       match_fields: ['description']
 
@@ -81,11 +81,9 @@
   
   handlers:
     - name: Reload alias
-      ansibleguy.opnsense.service:
-        name: 'alias'
-        action: 'restart'
+      ansibleguy.opnsense.reload:
+        target:  'alias'
 
     - name: Reload unbound
-      ansibleguy.opnsense.service:
-        name: 'alias'
-        action: 'unbound'
+      ansibleguy.opnsense.reload:
+        target:  'alias'
