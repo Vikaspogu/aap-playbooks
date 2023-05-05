@@ -4,8 +4,8 @@
   gather_facts: false
   module_defaults:
     group/ansibleguy.opnsense.all:
-      firewall: 'opnsense.template.ansibleguy.net'
-      api_credential_file: '/home/runner/.config/opn/opn.key'
+      firewall: '{{router}}'
+      api_credential_file: '/Users/vikaspogu/Downloads/apikey.txt'
       ssl_verify: false
   vars_files:
     - ../vars/router.yml
