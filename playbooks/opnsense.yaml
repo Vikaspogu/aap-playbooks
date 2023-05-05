@@ -47,26 +47,31 @@
         - name: Plex IP
           ansibleguy.opnsense.alias:
             name: 'plex_ip'
+            type: host
             content: '{{ alias.plex.ip }}'
 
         - name: Plex Port
           ansibleguy.opnsense.alias:
             name: 'plex_port'
+            type: port
             content: '{{ alias.plex.port }}'
 
         - name: HASS IoT Devices
           ansibleguy.opnsense.alias:
             name: 'hass_iot_devices'
+            type: host
             content: '{{ alias.hass_ips }}'
 
         - name: Canon Printer IP
           ansibleguy.opnsense.alias:
             name: 'canon_printer'
+            type: host
             content: '{{ alias.canon_printer }}'
 
         - name: NAS IP
           ansibleguy.opnsense.alias:
             name: 'nas_ip'
+            type: host
             content: '{{ alias.nas_ip }}'
 
     - name: "Install Packages" 
