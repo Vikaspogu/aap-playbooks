@@ -22,7 +22,7 @@
         - name: Setup DNS over TLS
           ansibleguy.opnsense.unbound_dot:
             target: '{{ item.target }}'
-            domain: ""
+            domain: " "
             port: 853
             verify: '{{ item.verify }}'
             state: 'present'
