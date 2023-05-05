@@ -5,7 +5,7 @@
   module_defaults:
     group/ansibleguy.opnsense.all:
       firewall: '{{router}}'
-      api_credential_file: '/Users/vikaspogu/Downloads/apikey.txt'
+      api_credential_file: '/home/runner/.config/opn/opn.key'
       ssl_verify: false
   vars_files:
     - ../vars/router.yml
