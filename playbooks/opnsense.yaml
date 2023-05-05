@@ -19,19 +19,18 @@
             domain: '{{ unbound.forwarding.domain }}'
             target: '{{ unbound.forwarding.ip }}'
 
-        - name: Setup DNS over TLS
-          ansibleguy.opnsense.unbound_dot:
-            target: '{{ item.target }}'
-            domain: " "
-            port: 853
-            verify: '{{ item.verify }}'
-            state: 'present'
-            enabled: true
-          loop: 
-            - {target: 1.1.1.1, verify: cloudflare-dns.com } 
-            - {target: 1.0.0.1, verify: cloudflare-dns.com } 
-            - {target: "2606:4700:4700::1111", verify: cloudflare-dns.com } 
-            - {target: "2606:4700:4700::1001", verify: cloudflare-dns.com } 
+        # - name: Setup DNS over TLS
+        #   ansibleguy.opnsense.unbound_dot:
+        #     target: '{{ item.target }}'
+        #     port: 853
+        #     verify: '{{ item.verify }}'
+        #     state: 'present'
+        #     enabled: true
+        #   loop: 
+        #     - {target: 1.1.1.1, verify: cloudflare-dns.com } 
+        #     - {target: 1.0.0.1, verify: cloudflare-dns.com } 
+        #     - {target: "2606:4700:4700::1111", verify: cloudflare-dns.com } 
+        #     - {target: "2606:4700:4700::1001", verify: cloudflare-dns.com } 
 
     - name: Alias setup
       notify:
