@@ -1,14 +1,12 @@
 ---
 - name: OPNSense Configuration
-  hosts: router
+  hosts: localhost
   gather_facts: false
   module_defaults:
     group/ansibleguy.opnsense.all:
       firewall: 'opnsense.template.ansibleguy.net'
       api_credential_file: '/home/runner/.config/opn/opn.key'
       ssl_verify: false
-    ansibleguy.opnsense.list:
-      target: 'unbound_forward'
   vars_files:
     - ../vars/router.yml
   tasks:
@@ -16,7 +14,7 @@
       notify:
         - Reload unbound
       block:
-        - name: Adding
+        - name: Adding unbound forwarding
           ansibleguy.opnsense.unbound_forward:
             domain: '{{ unbound.forwarding.domain }}'
             target: '{{ unbound.forwarding.ip }}'
