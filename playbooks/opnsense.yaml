@@ -93,9 +93,9 @@
         - name: Creating neighbor 
           ansibleguy.opnsense.frr_bgp_neighbor:
             enabled: true
-            ip: '{{item}}'
-            as_number: 64512
-            source_int: 'Servers'
+            peer_ip: '{{item}}'
+            remote_as: 64512
+            source_int: 'opt3'
           loop: '{{k3s_masters}}'
         
   handlers:
