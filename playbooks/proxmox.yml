@@ -6,6 +6,8 @@
     - ../vars/proxmox.yml
   tasks:
     - name: Prepare proxmox
+      notify:
+        - Reboot
       block:
         - name: Disable IPv6
           ansible.posix.sysctl:
@@ -88,5 +90,5 @@
           when: check_offloading_feature.rc == 1
 
   handlers:
-    - name: Reboot servers
+    - name: Reboot
       ansible.builtin.reboot:
