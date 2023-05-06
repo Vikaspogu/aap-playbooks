@@ -1,0 +1,92 @@
+---
+- name: Proxmox Prep
+  hosts: proxmox
+  gather_facts: false
+  vars_files:
+    - ../vars/proxmox.yml
+  tasks:
+    - name: Prepare proxmox
+      block:
+        - name: Disable IPv6
+          ansible.posix.sysctl:
+            name: "{{ item }}"
+            value: "1"
+            sysctl_set: true
+            state: present
+          loop:
+            - net.ipv6.conf.all.disable_ipv6
+            - net.ipv6.conf.default.disable_ipv6
+            - net.ipv6.conf.lo.disable_ipv6
+
+        - name: Upgrade all system packages
+          ansible.builtin.apt:
+            upgrade: full
+            update_cache: true
+            cache_valid_time: 3600
+            autoclean: true
+            autoremove: true
+          register: apt_upgrade
+          retries: 5
+          until: apt_upgrade is success
+
+        - name: Upgrade the OS (apt-get dist-upgrade)
+          ansible.builtin.apt:
+            upgrade: dist
+          register: apt_dist_upgrade
+          retries: 5
+          until: apt_dist_upgrade is success
+
+        - name: Install common packages
+          ansible.builtin.apt:
+            name:
+              - ethtool
+            install_recommends: false
+            update_cache: true
+            cache_valid_time: 3600
+            autoclean: true
+            autoremove: true
+          register: apt_install_common
+          retries: 5
+          until: apt_install_common is success
+
+        - name: Check if terraform role exists
+          ansible.builtin.shell: pveum role list
+          register: pvenum_role
+          changed_when: false
+
+        - name: Create terraform role
+          ansible.builtin.shell: pveum role add TerraformProv -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit Sys.Modify"
+          when: '"TerraformProv" not in pvenum_role.stdout'
+
+        - name: Check if terraform user exists
+          ansible.builtin.shell: pveum user list
+          register: pvenum_user
+          changed_when: false
+
+        - name: Create terraform user
+          ansible.builtin.shell: pveum user add {{ username }}@pve --password {{ password }}
+          when: '"{{ username }}@pve" not in pvenum_user.stdout'
+
+        - name: Access control
+          ansible.builtin.shell: pveum aclmod / -user {{ username }}@pve -role TerraformProv
+          when: '"{{ username }}@pve" not in pvenum_user.stdout'
+
+        - name: Check whether interfaces contains offloading feature
+          command: grep -Fxq "pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off" /etc/network/interfaces
+          register: check_offloading_feature
+          check_mode: false
+          ignore_errors: true
+          changed_when: false
+
+        - name: Disable offloading features
+          ansible.builtin.lineinfile:
+            path: /etc/network/interfaces
+            regex: "^bridge-fd 0$"
+            line: |
+              pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off
+              pre-up /sbin/ethtool --offload enp0s25 gso off tso off sg off gro off
+          when: check_offloading_feature.rc == 1
+
+  handlers:
+    - name: Reboot servers
+      ansible.builtin.reboot:
