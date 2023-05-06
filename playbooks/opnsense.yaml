@@ -80,7 +80,24 @@
           ansibleguy.opnsense.package:
             name: ['os-theme-rebellion', 'os-frr', 'os-haproxy']
             action: 'install'
-  
+
+    - name: "BGP Setup"
+      block:
+        - name: Configuring general settings
+          ansibleguy.opnsense.frr_bgp_general:
+            as_number: 64512
+            graceful: true
+            networks: ['{{server_net}}']
+            enabled: true
+
+        - name: Creating neighbor one
+          ansibleguy.opnsense.frr_bgp_neighbor:
+            enabled: true
+            ip: {{item}} 
+            as_number: 64512
+            source_int: Servers 
+          loop: '{{k3s_masters}}'
+        
   handlers:
     - name: Reload alias
       ansibleguy.opnsense.reload:
