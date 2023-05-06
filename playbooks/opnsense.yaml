@@ -93,7 +93,7 @@
         - name: Creating neighbor one
           ansibleguy.opnsense.frr_bgp_neighbor:
             enabled: true
-            ip: {{item}} 
+            ip: '{{item}}' 
             as_number: 64512
             source_int: Servers 
           loop: '{{k3s_masters}}'
