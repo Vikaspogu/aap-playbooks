@@ -10,8 +10,8 @@
         - name: Create new VM with minimal options and given vmid
           community.general.proxmox_kvm:
             api_user: root@pam
-            api_password: {{ password }}
-            api_host: {{ anisble_host }}
+            api_password: '{{ password }}'
+            api_host: '{{ anisble_host }}'
             name: k8s-7-proxmox-node
             node: pve
             net:
