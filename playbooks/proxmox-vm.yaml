@@ -1,0 +1,18 @@
+---
+- name: Proxmox Create VM
+  hosts: proxmox
+  gather_facts: false
+  vars_files:
+    - ../vars/proxmox.yml
+  tasks:
+    - name: Create proxmox k8s-7-proxmox-node  VM
+      block:
+        - name: Create new VM with minimal options and given vmid
+          community.general.proxmox_kvm:
+            api_user: root@pam
+            api_password: {{ password }}
+            api_host: {{ anisble_host }}
+            name: k8s-7-proxmox-node
+            node: pve
+            net:
+              net0: 'model="d8:9e:f3:3c:9b:81",virtio,bridge=vmbr0,'
