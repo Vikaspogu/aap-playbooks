@@ -73,6 +73,12 @@
             name: 'nas_ip'
             type: host
             content: '{{ alias.nas_ip }}'
+        
+        - name: Router IP
+          ansibleguy.opnsense.alias:
+            name: 'router_ip'
+            type: host
+            content: '{{ router }}'
 
     - name: "Install Packages" 
       block:
