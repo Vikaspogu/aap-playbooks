@@ -1,6 +1,6 @@
 ---
 - name: Proxmox Create VM
-  hosts: proxmox
+  hosts: localhost
   gather_facts: false
   vars_files:
     - ../vars/proxmox.yml
@@ -11,7 +11,7 @@
           community.general.proxmox:
             api_user: root@pam
             api_password: '{{ password }}'
-            api_host: "{{ ansible_ssh_host }}"
+            api_host: "{{ proxmox }}"
             hostname: test
             ostemplate: "none"
             node: pve
