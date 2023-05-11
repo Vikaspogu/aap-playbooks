@@ -16,3 +16,4 @@
             ostemplate: "none"
             node: pve
             netif: '{"net0":"virtio=9a:f3:33:5a:2d:68,bridge=vmbr0"}'
+            storage: "{{ storage }}"
