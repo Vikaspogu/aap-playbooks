@@ -8,12 +8,10 @@
     - name: Create proxmox k8s-7-proxmox-node  VM
       block:
         - name: Create new VM with minimal options and given vmid
-          community.general.proxmox:
+          community.general.proxmox_kvm:
             api_user: '{{ username }}@pve'
             api_password: '{{ password }}'
             api_host: "{{ proxmox }}"
-            hostname: test
-            ostemplate: "none"
+            name: test
             node: pve
-            netif: '{"net0":"virtio=9a:f3:33:5a:2d:68,bridge=vmbr0"}'
             storage: "{{ storage }}"
