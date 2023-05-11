@@ -12,7 +12,5 @@
             api_user: root@pam
             api_password: '{{ password }}'
             api_host: "{{ ansible_ssh_host }}"
-            name: k8s-7-proxmox-node
+            name: test
             node: pve
-            net:
-              net0: 'model="d8:9e:f3:3c:9b:81",virtio,bridge=vmbr0,'
