@@ -13,4 +13,5 @@
             api_password: '{{ password }}'
             api_host: "{{ ansible_ssh_host }}"
             name: test
+            hostname: test
             node: pve
