@@ -8,7 +8,7 @@
     - name: Create proxmox k8s-7-proxmox-node  VM
       block:
         - name: Create new VM with minimal options and given vmid
-          community.general.proxmox_kvm:
+          community.general.proxmox:
             api_user: root@pam
             api_password: '{{ password }}'
             api_host: "{{ ansible_ssh_host }}"
