@@ -9,7 +9,7 @@
       block:
         - name: Create new VM with minimal options and given vmid
           community.general.proxmox:
-            api_user: root@pam
+            api_user: '{{ username }}'
             api_password: '{{ password }}'
             api_host: "{{ proxmox }}"
             hostname: test
