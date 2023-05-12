@@ -13,7 +13,7 @@
             api_password: '{{ password }}'
             api_host: "{{ proxmox }}"
             name: "{{ item.name }}"
-            node: "{{ pve }}"
+            node: "{{ node }}"
             net:
               net0: '"model="{{ item.macadd }}",bridge="vmbr0"'
             cores: "{{ item.cores }}"
