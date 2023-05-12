@@ -1,13 +1,13 @@
 ---
-- name: Proxmox Create VMs
+- name: Proxmox VMs
   hosts: localhost
   gather_facts: false
   vars_files:
     - ../vars/proxmox.yml
   tasks:
-    - name: Create Proxmox  VMs
+    - name: Proxmox  VMs
       block:
-        - name: Create new VM with minimal options and given vmid
+        - name: Create/Destory OpenShift VMs
           community.general.proxmox_kvm:
             state: "{{ state }}"
             api_user: '{{ username }}@pve'
