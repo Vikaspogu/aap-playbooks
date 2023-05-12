@@ -15,7 +15,7 @@
             name: "{{ item.name }}"
             node: "{{ node }}"
             net:
-              net0: '"model="{{ item.macadd }}",bridge="vmbr0"'
+              net0: 'virtio={{ item.macadd }},bridge=vmbr0'
             cores: "{{ item.cores }}"
             memory: "{{ item.memory }}"
             sshkeys: "{{ sshKeys }}"
