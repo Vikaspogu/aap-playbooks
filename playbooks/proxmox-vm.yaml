@@ -9,6 +9,7 @@
       block:
         - name: Create new VM with minimal options and given vmid
           community.general.proxmox_kvm:
+            state: "{{ state }}"
             api_user: '{{ username }}@pve'
             api_password: '{{ password }}'
             api_host: "{{ proxmox }}"
@@ -20,6 +21,8 @@
             memory: "{{ item.memory }}"
             sshkeys: "{{ sshKeys }}"
             autostart: "{{ item.autostart }}"
+            ide:
+              ide0: "local:iso/agent.x86_64.iso"
             scsi:
               scsi0: "{{ item.storage }}:{{ item.diskSize }}"
           loop: "{{ vms }}"
