@@ -27,6 +27,14 @@
             value: '{{ item.value }}'
           loop: "{{ unbound.host }}"
 
+        - name: Adding unbound domain
+          ansibleguy.opnsense.unbound_domain:
+            domain: '{{ item.domain }}'
+            server: '{{ item.server }}'
+            state: 'present'
+            enabled: true
+          loop: "{{ unbound.domain }}"
+
         # - name: Setup DNS over TLS
         #   ansibleguy.opnsense.unbound_dot:
         #     target: '{{ item.target }}'
