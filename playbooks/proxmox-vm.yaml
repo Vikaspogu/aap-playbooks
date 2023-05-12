@@ -23,6 +23,7 @@
             autostart: "{{ item.autostart }}"
             ide:
               ide0: "local:iso/agent.x86_64.iso"
+            scsihw: "virtio-scsi-single"
             scsi:
               scsi0: "{{ item.storage }}:{{ item.diskSize }}"
           loop: "{{ vms }}"
