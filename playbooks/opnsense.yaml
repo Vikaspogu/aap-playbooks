@@ -20,11 +20,12 @@
             target: '{{ item.ip }}'
           loop: "{{ unbound.forwarding }}"
 
-        - name: Adding unbound domain
-          ansibleguy.opnsense.unbound_domain:
+        - name: Adding unbound host
+          ansibleguy.opnsense.unbound_host:
+            host: '{{ item.host }}'
             domain: '{{ item.domain }}'
-            server: '{{ item.server }}'
-          loop: "{{ unbound.domain }}"
+            value: '{{ item.value }}'
+          loop: "{{ unbound.host }}"
 
         # - name: Setup DNS over TLS
         #   ansibleguy.opnsense.unbound_dot:
