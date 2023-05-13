@@ -9,6 +9,7 @@
       block:
         - name: Create/Destory OpenShift VMs
           community.general.proxmox_kvm:
+            proxmox_default_behavior: "compatibility"
             state: "{{ state }}"
             api_user: '{{ username }}@pve'
             api_password: '{{ password }}'
