@@ -7,17 +7,6 @@
   tasks:
     - name: Proxmox  VMs
       block:
-        - name: Stop OpenShift VMs
-          community.general.proxmox_kvm:
-            state: "stopped"
-            api_user: '{{ username }}@pve'
-            api_password: '{{ password }}'
-            api_host: "{{ proxmox }}"
-            name: "{{ item.name }}"
-            node: "{{ node }}"
-          loop: "{{ vms }}"
-          when: state == "absent"
-
         - name: Create/Destory OpenShift VMs
           community.general.proxmox_kvm:
             state: "{{ state }}"
