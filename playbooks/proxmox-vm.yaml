@@ -16,7 +16,7 @@
             name: "{{ item.name }}"
             node: "{{ node }}"
           loop: "{{ vms }}"
-          when: "state == absent"
+          when: state == "absent"
 
         - name: Create/Destory OpenShift VMs
           community.general.proxmox_kvm:
@@ -31,7 +31,7 @@
             cores: "{{ item.cores }}"
             memory: "{{ item.memory }}"
             sshkeys: "{{ sshKeys }}"
-            autostart: "{{ item.autostart }}"
+            autostart: "{{ autostart }}"
             ide:
               ide2: "local:iso/agent.x86_64.iso"
             scsihw: "virtio-scsi-single"
