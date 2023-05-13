@@ -9,7 +9,7 @@
       block:
         - name: Stop OpenShift VMs
           community.general.proxmox_kvm:
-            state: "{{ state }}"
+            state: "stopped"
             api_user: '{{ username }}@pve'
             api_password: '{{ password }}'
             api_host: "{{ proxmox }}"
