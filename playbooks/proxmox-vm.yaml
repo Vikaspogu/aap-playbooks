@@ -16,7 +16,7 @@
             api_host: "{{ proxmox }}"
             name: "{{ item.name }}"
             node: "{{ node }}"
-            boot: cdn
+            boot: dc
             net:
               net0: 'virtio={{ item.macadd }},bridge=vmbr0'
             cores: "{{ item.cores }}"
