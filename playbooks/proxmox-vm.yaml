@@ -7,6 +7,17 @@
   tasks:
     - name: Proxmox  VMs
       block:
+        - name: Stop OpenShift VMs
+          community.general.proxmox_kvm:
+            state: "{{ state }}"
+            api_user: '{{ username }}@pve'
+            api_password: '{{ password }}'
+            api_host: "{{ proxmox }}"
+            name: "{{ item.name }}"
+            node: "{{ node }}"
+          loop: "{{ vms }}"
+          when: "state == absent"
+
         - name: Create/Destory OpenShift VMs
           community.general.proxmox_kvm:
             state: "{{ state }}"
@@ -22,7 +33,7 @@
             sshkeys: "{{ sshKeys }}"
             autostart: "{{ item.autostart }}"
             ide:
-              ide0: "local:iso/agent.x86_64.iso"
+              ide2: "local:iso/agent.x86_64.iso"
             scsihw: "virtio-scsi-single"
             scsi:
               scsi0: "{{ item.storage }}:{{ item.diskSize }}"
