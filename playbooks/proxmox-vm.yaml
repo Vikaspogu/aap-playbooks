@@ -26,12 +26,13 @@
             api_host: "{{ proxmox }}"
             name: "{{ item.name }}"
             node: "{{ node }}"
+            boot: cnd
             net:
               net0: 'virtio={{ item.macadd }},bridge=vmbr0'
             cores: "{{ item.cores }}"
             memory: "{{ item.memory }}"
             sshkeys: "{{ sshKeys }}"
-            autostart: "{{ autostart }}"
+            autostart: "{{ item.autostart }}"
             ide:
               ide2: "local:iso/agent.x86_64.iso"
             scsihw: "virtio-scsi-single"
