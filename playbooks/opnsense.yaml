@@ -35,18 +35,8 @@
             enabled: true
           loop: "{{ unbound.domain }}"
 
-        # - name: Setup DNS over TLS
-        #   ansibleguy.opnsense.unbound_dot:
-        #     target: '{{ item.target }}'
-        #     port: 853
-        #     verify: '{{ item.verify }}'
-        #     state: 'present'
-        #     enabled: true
-        #   loop: 
-        #     - {target: 1.1.1.1, verify: cloudflare-dns.com } 
-        #     - {target: 1.0.0.1, verify: cloudflare-dns.com } 
-        #     - {target: "2606:4700:4700::1111", verify: cloudflare-dns.com } 
-        #     - {target: "2606:4700:4700::1001", verify: cloudflare-dns.com } 
+        - name: flush
+          ansible.builtin.meta: flush_handlers
 
     - name: Alias setup
       notify:
@@ -127,4 +117,4 @@
 
     - name: Reload unbound
       ansibleguy.opnsense.reload:
-        target:  'alias'
+        target:  'unbound'
