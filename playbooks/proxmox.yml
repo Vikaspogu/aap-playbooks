@@ -51,26 +51,26 @@
           retries: 5
           until: apt_install_common is success
 
-        - name: Check if terraform role exists
+        - name: Check if automation role exists
           ansible.builtin.shell: pveum role list
           register: pvenum_role
           changed_when: false
 
-        - name: Create terraform role
-          ansible.builtin.shell: pveum role add TerraformProv -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit Sys.Modify"
-          when: '"TerraformProv" not in pvenum_role.stdout'
+        - name: Create automation role
+          ansible.builtin.shell: pveum role add AutomationProv -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit Sys.Modify"
+          when: '"AutomationProv" not in pvenum_role.stdout'
 
-        - name: Check if terraform user exists
+        - name: Check if automation user exists
           ansible.builtin.shell: pveum user list
           register: pvenum_user
           changed_when: false
 
-        - name: Create terraform user
+        - name: Create automation user
           ansible.builtin.shell: pveum user add {{ username }}@pve --password {{ password }}
           when: '"{{ username }}@pve" not in pvenum_user.stdout'
 
         - name: Access control
-          ansible.builtin.shell: pveum aclmod / -user {{ username }}@pve -role TerraformProv
+          ansible.builtin.shell: pveum aclmod / -user {{ username }}@pve -role AutomationProv
           when: '"{{ username }}@pve" not in pvenum_user.stdout'
 
         - name: Check whether interfaces contains offloading feature
