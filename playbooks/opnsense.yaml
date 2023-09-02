@@ -92,6 +92,12 @@
             type: host
             content: '{{ unifi_ip }}'
 
+        - name: TV IPs
+          ansibleguy.opnsense.alias:
+            name: 'tv_ips'
+            type: host
+            content: '{{ tv_ips }}'
+
     - name: "Install Packages" 
       block:
         - name: Installing - multiple packages at once
