@@ -1,0 +1,9 @@
+---
+all:
+  hosts:
+    proxmox:
+      ansible_user: root
+      ansible_host: 10.30.30.40
+    aap-controller:
+      ansible_user: vikaspogu
+      ansible_host: 10.30.30.41

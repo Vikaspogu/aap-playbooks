@@ -1,0 +1,35 @@
+---
+version: "3"
+
+vars:
+  PYTHON_BIN: python3
+  PROJECT_DIR:
+    sh: "git rev-parse --show-toplevel"
+
+env:
+  SOPS_AGE_KEY_FILE: ~/.config/sops/age/keys.txt
+  PATH: "{{.ROOT_DIR}}/.venv/bin:$PATH"
+  VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
+  ANSIBLE_COLLECTIONS_PATH: "{{.ROOT_DIR}}/.venv/galaxy"
+  ANSIBLE_ROLES_PATH: "{{.ROOT_DIR}}/.venv/galaxy/ansible_roles"
+  ANSIBLE_VARS_ENABLED: "host_group_vars,community.sops.sops"
+  
+tasks:
+
+  default: task -l
+
+  deps:
+    desc: Create a Python virtual env and install required packages
+    cmds:
+      - "{{.PYTHON_BIN}} -m venv {{.ROOT_DIR}}/.venv"
+      - .venv/bin/python3 -m pip install --upgrade pip setuptools wheel
+      - .venv/bin/python3 -m pip install --upgrade --requirement "{{.ROOT_DIR}}/requirements.txt"
+      - .venv/bin/ansible-galaxy install --role-file "{{.ROOT_DIR}}/requirements.yaml" --force
+
+  init:
+    desc: Install / Upgrade Ansible galaxy deps
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - pip3 install --user --requirement requirements.txt
+      - ansible-galaxy install -r requirements.yaml --roles-path ~/.ansible/roles --force
+      - ansible-galaxy collection install -r requirements.yaml --collections-path ~/.ansible/collections --force

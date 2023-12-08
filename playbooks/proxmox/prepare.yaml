@@ -1,9 +1,9 @@
 ---
-- name: Proxmox Prep
+- name: Playbook to Proxmox
   hosts: proxmox
   gather_facts: false
   vars_files:
-    - ../vars/proxmox.yml
+    - ../../vars/proxmox.yml
   tasks:
     - name: Prepare proxmox
       notify:

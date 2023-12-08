@@ -1,0 +1,59 @@
+---
+- name: Playbook to setup Ansible Automation Platform
+  hosts: aap-controller
+  gather_facts: false
+  vars_files:
+    - ../../vars/proxmox.yaml
+  tasks:
+    - name: User Configuration | Silence login
+      ansible.builtin.file:
+        dest: "{{ '/home/' + ansible_user if ansible_user != 'root' else '/root' }}/.hushlogin"
+        state: touch
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+        modification_time: preserve
+        access_time: preserve
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      become: true
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers.d/{{ ansible_user }}
+        state: present
+        create: true
+        line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+        mode: "0644"
+
+    - name: Install required packages
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - ansible-core
+          - git
+          - wget
+          - rsync
+
+    - name: Copy Ansible automation bundle
+      ansible.builtin.copy:
+        src: /Users/vikaspogu/Documents/git-repos/homelab-playbooks/packages/ansible-automation-platform-setup-bundle-2.4-3-x86_64
+        dest: /home/{{ ansible_user }}/
+        mode: "0644"
+
+    - name: Create sops directory
+      become_user: awx
+      become: true
+      ansible.builtin.file:
+        path: /var/lib/awx/.sops-key
+        state: directory
+        mode: "0644"
+
+    - name: Copy sops key
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        src: /Users/vikaspogu/.config/sops/age/keys.txt
+        dest: /var/lib/awx/.sops-key/keys.txt
+        mode: "0644"
+        owner: awx
+        group: awx

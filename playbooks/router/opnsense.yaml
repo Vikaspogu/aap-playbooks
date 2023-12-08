@@ -35,7 +35,7 @@
             enabled: true
           loop: "{{ unbound.domain }}"
 
-        - name: flush
+        - name: Flush
           ansible.builtin.meta: flush_handlers
 
     - name: Alias setup
@@ -79,7 +79,7 @@
             name: 'nas_ip'
             type: host
             content: '{{ alias.nas_ip }}'
-        
+
         - name: Router IP
           ansibleguy.opnsense.alias:
             name: 'router_ip'
@@ -98,35 +98,18 @@
             type: host
             content: '{{ tv_ips }}'
 
-    - name: "Install Packages" 
+    - name: "Install Packages"
       block:
         - name: Installing - multiple packages at once
           ansibleguy.opnsense.package:
-            name: ['os-theme-rebellion', 'os-frr', 'os-haproxy']
+            name: ['os-theme-rebellion', 'os-mdns-repeater']
             action: 'install'
 
-    - name: "BGP Setup"
-      block:
-        - name: Configuring general settings
-          ansibleguy.opnsense.frr_bgp_general:
-            as_number: 64512
-            graceful: true
-            networks: ['{{server_net}}']
-            enabled: true
-
-        - name: Creating neighbor 
-          ansibleguy.opnsense.frr_bgp_neighbor:
-            enabled: true
-            peer_ip: '{{item}}'
-            remote_as: 64512
-            source_int: 'opt3'
-          loop: '{{k3s_masters}}'
-        
   handlers:
     - name: Reload alias
       ansibleguy.opnsense.reload:
-        target:  'alias'
+        target: 'alias'
 
     - name: Reload unbound
       ansibleguy.opnsense.reload:
-        target:  'unbound'
+        target: 'unbound'
