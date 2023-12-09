@@ -5,13 +5,22 @@
   vars_files:
     - ../../vars/proxmox.yaml
   tasks:
+    - name: Get absolute path to this Git repository # noqa: command-instead-of-module
+      ansible.builtin.command: git rev-parse --show-toplevel
+      delegate_to: localhost
+      become: false
+      register: repository_path
+      changed_when: false
+      check_mode: false
+      failed_when: repository_path.rc != 0
+
     - name: User Configuration | Silence login
       ansible.builtin.file:
         dest: "{{ '/home/' + ansible_user if ansible_user != 'root' else '/root' }}/.hushlogin"
         state: touch
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: "0644"
+        owner: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
+        mode: '0644'
         modification_time: preserve
         access_time: preserve
 
@@ -23,7 +32,7 @@
         create: true
         line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
-        mode: "0644"
+        mode: '0644'
 
     - name: Install required packages
       become: true
@@ -34,11 +43,17 @@
           - wget
           - rsync
 
+    - name: Check if bundle exists
+      ansible.builtin.stat:
+        path: '/home/{{ ansible_user }}/ansible-automation-platform-setup-bundle-2.4-3-x86_64'
+      register: aap_bundle_result
+
     - name: Copy Ansible automation bundle
       ansible.builtin.copy:
-        src: /Users/vikaspogu/Documents/git-repos/homelab-playbooks/packages/ansible-automation-platform-setup-bundle-2.4-3-x86_64
+        src: '{{ repository_path.stdout }}/packages/ansible-automation-platform-setup-bundle-2.4-3-x86_64'
         dest: /home/{{ ansible_user }}/
-        mode: "0644"
+        mode: '0644'
+      when: not aap_bundle_result.stat.exists
 
     - name: Create sops directory
       become_user: awx
@@ -46,14 +61,16 @@
       ansible.builtin.file:
         path: /var/lib/awx/.sops-key
         state: directory
-        mode: "0644"
+        mode: '0644'
 
     - name: Copy sops key
       become: true
       become_user: root
       ansible.builtin.copy:
-        src: /Users/vikaspogu/.config/sops/age/keys.txt
-        dest: /var/lib/awx/.sops-key/keys.txt
-        mode: "0644"
+        src: '{{ item.local_path }}'
+        dest: '{{ item.remote_path }}'
+        mode: '0644'
         owner: awx
         group: awx
+      loop:
+        - {local_path: /Users/vikaspogu/.config/sops/age/keys.txt, remote_path: /var/lib/awx/.sops-key/keys.txt }

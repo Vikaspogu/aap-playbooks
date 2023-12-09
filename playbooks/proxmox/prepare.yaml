@@ -11,8 +11,8 @@
       block:
         - name: Disable IPv6
           ansible.posix.sysctl:
-            name: "{{ item }}"
-            value: "1"
+            name: '{{ item }}'
+            value: '1'
             sysctl_set: true
             state: present
           loop:
@@ -83,7 +83,7 @@
         - name: Disable offloading features
           ansible.builtin.lineinfile:
             path: /etc/network/interfaces
-            regex: "^bridge-fd 0$"
+            regex: '^bridge-fd 0$'
             line: |
               pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off
               pre-up /sbin/ethtool --offload enp0s25 gso off tso off sg off gro off

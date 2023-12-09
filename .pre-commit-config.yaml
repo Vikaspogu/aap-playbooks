@@ -6,7 +6,7 @@ repos:
     hooks:
       - args:
           - --config-file
-          - .github/linters/.yamllint.yaml
+          - .yamllint.yaml
         id: yamllint
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -29,9 +29,11 @@ repos:
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
-  - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.21
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v3.1.0' # Use the sha or tag you want to point at
     hooks:
-      - id: terraform-fmt
-      - id: terraform-validate
-      - id: tflint
+      - id: prettier
+        args:
+          - --config-file
+          - .prettierrc.yaml
+        files: \.(yaml|yml)$

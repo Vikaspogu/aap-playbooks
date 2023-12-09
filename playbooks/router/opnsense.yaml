@@ -18,14 +18,14 @@
           ansibleguy.opnsense.unbound_forward:
             domain: '{{ item.domain }}'
             target: '{{ item.ip }}'
-          loop: "{{ unbound.forwarding }}"
+          loop: '{{ unbound.forwarding }}'
 
         - name: Adding unbound host
           ansibleguy.opnsense.unbound_host:
             host: '{{ item.host }}'
             domain: '{{ item.domain }}'
             value: '{{ item.value }}'
-          loop: "{{ unbound.host }}"
+          loop: '{{ unbound.host }}'
 
         - name: Adding unbound domain
           ansibleguy.opnsense.unbound_domain:
@@ -33,7 +33,7 @@
             server: '{{ item.server }}'
             state: 'present'
             enabled: true
-          loop: "{{ unbound.domain }}"
+          loop: '{{ unbound.domain }}'
 
         - name: Flush
           ansible.builtin.meta: flush_handlers
@@ -98,7 +98,7 @@
             type: host
             content: '{{ tv_ips }}'
 
-    - name: "Install Packages"
+    - name: 'Install Packages'
       block:
         - name: Installing - multiple packages at once
           ansibleguy.opnsense.package:

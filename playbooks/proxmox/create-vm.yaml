@@ -15,7 +15,7 @@
         cpu: '{{ cpu_type }}'
         cores: '{{ cores }}'
         memory: '{{ memory }}'
-        scsihw: "virtio-scsi-single"
+        scsihw: 'virtio-scsi-single'
         scsi:
           scsi0: '{{ storage_type }}:{{ disk_size }},iothread=1,format=raw'
         sshkeys: '{{ ssh_keys }}'

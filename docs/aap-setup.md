@@ -28,8 +28,10 @@
 
 6. Login into AAP
 
-7. Add quay credentials
+7. Add quay and vault credentials
 
 8. Add custom execution image from quay
 
 9. Add new project from git repo and select custom execution image
+
+10. Add inventory and choose sourced from project
