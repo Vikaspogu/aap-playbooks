@@ -37,7 +37,7 @@
         path: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/install-config.yaml
         state: present
         regexp: 'pullSecret'
-        line: 'pullSecret: "{{ redhat_pull_secret }}"'
+        line: 'pullSecret: {{ redhat_pull_secret }}'
 
     - name: Run the agent create
       ansible.builtin.command:
