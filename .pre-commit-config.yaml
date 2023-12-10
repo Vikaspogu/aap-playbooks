@@ -35,5 +35,5 @@ repos:
       - id: prettier
         args:
           - --config-file
-          - .prettierrc.yaml
+          - ./.prettierrc.yaml
         files: \.(yaml|yml)$

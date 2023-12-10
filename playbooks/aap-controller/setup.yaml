@@ -73,4 +73,7 @@
         owner: awx
         group: awx
       loop:
-        - {local_path: /Users/vikaspogu/.config/sops/age/keys.txt, remote_path: /var/lib/awx/.sops-key/keys.txt }
+        - {
+            local_path: /Users/vikaspogu/.config/sops/age/keys.txt,
+            remote_path: /var/lib/awx/.sops-key/keys.txt,
+          }
