@@ -17,4 +17,4 @@
       become: true
       ansible.builtin.dnf:
         name:
-          - nmstatectl
+          - nmstate
