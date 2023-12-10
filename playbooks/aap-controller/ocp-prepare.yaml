@@ -20,6 +20,11 @@
         name:
           - nmstate
 
+    - name: Delete content & directory
+      ansible.builtin.file:
+        state: absent
+        path: /home/{{ ansible_user }}/openshift-multicluster
+
     - name: Clone git repo
       ansible.builtin.git:
         repo: https://github.com/Vikaspogu/openshift-multicluster.git
@@ -40,7 +45,7 @@
         path: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/cluster-config/install-config.yaml
         state: present
         regexp: 'pullSecret'
-        line: 'pullSecret={{ redhat_pull_secret }}'
+        line: 'pullSecret: {{ redhat_pull_secret }}'
 
     - name: Run the agent create
       ansible.builtin.command:
