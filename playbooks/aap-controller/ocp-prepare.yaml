@@ -7,13 +7,13 @@
       ansible.builtin.unarchive:
         src: '{{ item }}'
         dest: /usr/local/bin
-        remote_src: yes
+        remote_src: true
       loop:
         - https://mirror.openshift.com/pub/openshift-v4/arm64/clients/ocp/latest/openshift-install-linux-amd64.tar.gz
         - https://mirror.openshift.com/pub/openshift-v4/arm64/clients/ocp/latest/openshift-client-linux.tar.gz
 
     - name: Install Packages
+      become: true
       ansible.builtin.dnf:
         name:
           - nmstatectl
-        state: installed
