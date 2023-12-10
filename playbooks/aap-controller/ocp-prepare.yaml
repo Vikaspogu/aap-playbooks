@@ -37,14 +37,14 @@
 
     - name: Add pull secret
       ansible.builtin.lineinfile:
-        path: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/install-config.yaml
+        path: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/cluster-config/install-config.yaml
         state: present
         regexp: 'pullSecret'
         line: 'pullSecret={{ redhat_pull_secret }}'
 
     - name: Run the agent create
       ansible.builtin.command:
-        cmd: openshift-install agent create image --dir installer/pxm-acm
+        cmd: openshift-install agent create image --dir installer/pxm-acm/
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
     # - name: Copy agent ISO
