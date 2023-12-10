@@ -28,10 +28,12 @@
         update: true
 
     - name: Copy installer files
-      ansible.posix.synchronize:
+      ansible.builtin.copy:
         src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config
         dest: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm
-        mode: push
+        remote_src: true
+        mode: '0755'
+        directory_mode: true
 
     - name: Add pull secret
       ansible.builtin.lineinfile:
