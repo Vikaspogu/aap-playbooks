@@ -32,28 +32,20 @@
         clone: true
         update: true
 
-    - name: Copy installer files
-      ansible.builtin.copy:
-        src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config
-        dest: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm
-        remote_src: true
-        mode: '0755'
-        directory_mode: true
-
     - name: Add pull secret
       ansible.builtin.lineinfile:
-        path: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/cluster-config/install-config.yaml
+        path: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/install-config.yaml
         state: present
         regexp: 'pullSecret'
         line: 'pullSecret: {{ redhat_pull_secret }}'
 
     - name: Run the agent create
       ansible.builtin.command:
-        cmd: openshift-install agent create image --dir installer/pxm-acm/
+        cmd: openshift-install agent create image --dir installer/cluster-config
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
     # - name: Copy agent ISO
     #   ansible.posix.synchronize:
-    #     src: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/agent.x86_64.iso
+    #     src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
     #     dest: /var/lib/vz/template/iso
     #   delegate_to: proxmox
