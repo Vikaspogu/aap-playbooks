@@ -23,7 +23,7 @@
     - name: Clone git repo
       ansible.builtin.git:
         repo: https://github.com/Vikaspogu/openshift-multicluster.git
-        dest: /home/{{ ansible_user }}
+        dest: /home/{{ ansible_user }}/openshift-multicluster
         clone: true
         update: true
 
