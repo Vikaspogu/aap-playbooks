@@ -4,6 +4,7 @@
   gather_facts: false
   tasks:
     - name: Download installer clients
+      become: true
       ansible.builtin.unarchive:
         src: '{{ item }}'
         dest: /usr/local/bin
