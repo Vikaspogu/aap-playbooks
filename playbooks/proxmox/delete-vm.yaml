@@ -1,0 +1,15 @@
+---
+- name: Playbook to delete a VM
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../../vars/proxmox.yaml
+  tasks:
+    - name: Delete a VM
+      community.general.proxmox_kvm:
+        node: pve
+        api_user: '{{ datacenter.username }}@pve'
+        api_password: '{{ datacenter.password }}'
+        api_host: '{{ datacenter.ip }}'
+        name: '{{ vm_name }}'
+        state: absent

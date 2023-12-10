@@ -1,0 +1,18 @@
+---
+- name: Playbook to prepare VM for openshift installer
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Download installer clients
+      ansible.builtin.unarchive:
+        src: '{{ item }}'
+        dest: /usr/local/bin
+      loop:
+        - https://mirror.openshift.com/pub/openshift-v4/arm64/clients/ocp/latest/openshift-install-linux-amd64.tar.gz
+        - https://mirror.openshift.com/pub/openshift-v4/arm64/clients/ocp/latest/openshift-client-linux.tar.gz
+
+    - name: Install Packages
+      ansible.builtin.dnf:
+        name:
+          - nmstatectl
+        state: installed
