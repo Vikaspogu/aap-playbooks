@@ -9,6 +9,7 @@
         src: '{{ item }}'
         dest: /usr/local/bin
         remote_src: true
+        mode: '0755'
       loop:
         - https://mirror.openshift.com/pub/openshift-v4/arm64/clients/ocp/latest/openshift-install-linux-amd64.tar.gz
         - https://mirror.openshift.com/pub/openshift-v4/arm64/clients/ocp/latest/openshift-client-linux.tar.gz
