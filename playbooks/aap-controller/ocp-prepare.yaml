@@ -18,3 +18,34 @@
       ansible.builtin.dnf:
         name:
           - nmstate
+
+    - name: Clone git repo
+      ansible.builtin.git:
+        repo: https://github.com/Vikaspogu/openshift-multicluster.git
+        dest: /home/{{ ansible_user }}
+        clone: true
+        update: true
+
+    - name: Copy installer files
+      ansible.builtin.copy:
+        src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config
+        dest: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm
+        mode: '0755'
+
+    - name: Add pull secret
+      ansible.builtin.lineinfile:
+        path: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/install-config.yaml
+        state: present
+        regexp: 'pullSecret'
+        line: 'pullSecret={{ redhat_pull_secret }}'
+
+    - name: Run the agent create
+      ansible.builtin.command:
+        cmd: openshift-install agent create image --dir installer/pxm-acm
+        chdir: /home/{{ ansible_user }}/openshift-multicluster
+
+    # - name: Copy agent ISO
+    #   ansible.posix.synchronize:
+    #     src: /home/{{ ansible_user }}/openshift-multicluster/installer/pxm-acm/agent.x86_64.iso
+    #     dest: /var/lib/vz/template/iso
+    #   delegate_to: proxmox
