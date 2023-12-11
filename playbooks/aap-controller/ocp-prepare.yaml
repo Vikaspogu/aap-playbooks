@@ -44,8 +44,9 @@
         cmd: openshift-install agent create image --dir installer/cluster-config
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
-    # - name: Copy agent ISO
-    #   ansible.posix.synchronize:
-    #     src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
-    #     dest: /var/lib/vz/template/iso
-    #   delegate_to: proxmox
+    - name: Copy agent ISO
+      ansible.posix.synchronize:
+        src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
+        dest: /var/lib/vz/template/iso
+        mode: pull
+      delegate_to: proxmox
