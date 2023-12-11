@@ -51,4 +51,4 @@
         dest: /var/lib/vz/template/iso
         mode: pull
       delegate_to: proxmox
-      timeout: 3m
+      timeout: 300
