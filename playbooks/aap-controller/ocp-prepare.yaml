@@ -48,6 +48,5 @@
       ansible.builtin.copy:
         src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
         dest: /var/lib/vz/template/iso
-        remote_src: true
         mode: '0755'
       delegate_to: proxmox
