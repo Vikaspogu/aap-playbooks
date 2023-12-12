@@ -3,46 +3,46 @@
   hosts: aap-controller
   gather_facts: false
   tasks:
-    - name: Download installer clients
-      become: true
-      ansible.builtin.unarchive:
-        src: '{{ item }}'
-        dest: /usr/local/bin
-        remote_src: true
-        mode: '0755'
-      loop:
-        - https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/openshift-install-linux.tar.gz
-        - https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/openshift-client-linux.tar.gz
+    # - name: Download installer clients
+    #   become: true
+    #   ansible.builtin.unarchive:
+    #     src: '{{ item }}'
+    #     dest: /usr/local/bin
+    #     remote_src: true
+    #     mode: '0755'
+    #   loop:
+    #     - https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/openshift-install-linux.tar.gz
+    #     - https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/openshift-client-linux.tar.gz
 
-    - name: Install Packages
-      become: true
-      ansible.builtin.dnf:
-        name:
-          - nmstate
+    # - name: Install Packages
+    #   become: true
+    #   ansible.builtin.dnf:
+    #     name:
+    #       - nmstate
 
-    - name: Delete content & directory
-      ansible.builtin.file:
-        state: absent
-        path: /home/{{ ansible_user }}/openshift-multicluster
+    # - name: Delete content & directory
+    #   ansible.builtin.file:
+    #     state: absent
+    #     path: /home/{{ ansible_user }}/openshift-multicluster
 
-    - name: Clone git repo
-      ansible.builtin.git:
-        repo: https://github.com/Vikaspogu/openshift-multicluster.git
-        dest: /home/{{ ansible_user }}/openshift-multicluster
-        clone: true
-        update: true
+    # - name: Clone git repo
+    #   ansible.builtin.git:
+    #     repo: https://github.com/Vikaspogu/openshift-multicluster.git
+    #     dest: /home/{{ ansible_user }}/openshift-multicluster
+    #     clone: true
+    #     update: true
 
-    - name: Add pull secret
-      ansible.builtin.lineinfile:
-        path: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/install-config.yaml
-        state: present
-        regexp: 'pullSecret'
-        line: "pullSecret: '{{ redhat_pull_secret }}'"
+    # - name: Add pull secret
+    #   ansible.builtin.lineinfile:
+    #     path: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/install-config.yaml
+    #     state: present
+    #     regexp: 'pullSecret'
+    #     line: "pullSecret: '{{ redhat_pull_secret }}'"
 
-    - name: Run the agent create
-      ansible.builtin.command:
-        cmd: openshift-install agent create image --dir installer/cluster-config
-        chdir: /home/{{ ansible_user }}/openshift-multicluster
+    # - name: Run the agent create
+    #   ansible.builtin.command:
+    #     cmd: openshift-install agent create image --dir installer/cluster-config
+    #     chdir: /home/{{ ansible_user }}/openshift-multicluster
 
     - name: Copy agent ISO
       ansible.builtin.copy:
