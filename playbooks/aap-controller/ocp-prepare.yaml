@@ -45,8 +45,15 @@
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
     - name: Copy agent ISO
-      ansible.builtin.fetch:
+      ansible.builtin.copy:
         src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
+        dest: /tmp/
+        mode: '0755'
+      delegate_to: localhost
+
+    - name: Copy agent ISO
+      ansible.builtin.copy:
+        src: /tmp/agent.x86_64.iso
         dest: /var/lib/vz/template/iso
         mode: '0755'
       delegate_to: proxmox
