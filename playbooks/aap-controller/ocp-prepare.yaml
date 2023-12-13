@@ -44,15 +44,20 @@
         cmd: openshift-install agent create image --dir installer/cluster-config
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
-    - name: Copy agent ISO
+    - name: Fetch ISO image to localhost
       ansible.builtin.fetch:
         src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
         dest: /tmp/
         flat: true
 
-    - name: Copy agent ISO
+    - name: Copy agent ISO to proxmox
       ansible.builtin.copy:
         src: /tmp/agent.x86_64.iso
         dest: /var/lib/vz/template/iso
         mode: '0755'
       delegate_to: proxmox
+
+    - name: Cleanup ISO image
+      ansible.builtin.file:
+        path: /tmp/agent.x86_64.iso
+        state: absent
