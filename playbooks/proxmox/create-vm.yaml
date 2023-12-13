@@ -16,6 +16,7 @@
         cores: '{{ cores }}'
         memory: '{{ memory }}'
         scsihw: 'virtio-scsi-single'
+        boot: '{{ boot_order | default("cdn") }}'
         scsi:
           scsi0: '{{ storage_type }}:{{ disk_size }},iothread=1,format=raw'
         sshkeys: '{{ ssh_keys }}'

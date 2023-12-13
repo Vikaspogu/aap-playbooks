@@ -1,0 +1,17 @@
+---
+- name: Playbook to create a disk and attach to VM
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../../vars/proxmox.yaml
+  tasks:
+    - name: Create a disk and attach to VM
+      community.general.proxmox_disk:
+        api_user: '{{ datacenter.username }}@pve'
+        api_password: '{{ datacenter.password }}'
+        api_host: '{{ datacenter.ip }}'
+        name: '{{ vm_name }}'
+        disk: 'scsi{{disk_number | default("1")}}'
+        storage: '{{ storage_type }}'
+        size: '{{ disk_size }}'
+        state: present
