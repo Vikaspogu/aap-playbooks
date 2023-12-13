@@ -12,4 +12,7 @@
         api_password: '{{ datacenter.password }}'
         api_host: '{{ datacenter.ip }}'
         name: '{{ vm_name }}'
-        state: absent
+        state: '{{ item }}'
+      loop:
+        - stopped
+        - absent
