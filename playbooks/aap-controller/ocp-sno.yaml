@@ -1,0 +1,28 @@
+---
+- name: Playbook to prepare VM for openshift installer
+  hosts: aap-controller
+  gather_facts: false
+  tasks:
+    - name: Get URL for SNO ISO
+      become: true
+      ansible.builtin.shell:
+        cmd: '/usr/local/bin/oc get infraenv homelab-inventory -n homelab-inventory  -o custom-columns=POD:.status.isoDownloadURL --no-headers --kubeconfig=/home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/auth/kubeconfig --insecure-skip-tls-verify=true'
+      register: sno_url
+
+    - name: Download SNO ISO
+      ansible.builtin.get_url:
+        url: '{{ stdout_lines }}'
+        dest: /tmp/sno.iso
+        mode: '0755'
+
+    - name: Copy agent ISO to proxmox
+      ansible.builtin.copy:
+        src: /tmp/sno.iso
+        dest: /var/lib/vz/template/iso
+        mode: '0755'
+      delegate_to: proxmox
+
+    - name: Cleanup ISO image
+      ansible.builtin.file:
+        path: /tmp/sno.iso
+        state: absent
