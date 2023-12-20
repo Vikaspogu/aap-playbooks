@@ -12,17 +12,6 @@
     - name: Download SNO ISO
       ansible.builtin.get_url:
         url: '{{ sno_url.stdout }}'
-        dest: /tmp/sno.iso
-        mode: '0755'
-
-    - name: Copy agent ISO to proxmox
-      ansible.builtin.copy:
-        src: /tmp/sno.iso
-        dest: /var/lib/vz/template/iso
+        dest: /var/lib/vz/template/iso/sno.iso
         mode: '0755'
       delegate_to: proxmox
-
-    - name: Cleanup ISO image
-      ansible.builtin.file:
-        path: /tmp/sno.iso
-        state: absent
