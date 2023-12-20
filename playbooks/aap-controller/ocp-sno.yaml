@@ -11,7 +11,7 @@
 
     - name: Download SNO ISO
       ansible.builtin.get_url:
-        url: '{{ sno_url.stdout_lines }}'
+        url: '{{ sno_url.stdout }}'
         dest: /tmp/sno.iso
         mode: '0755'
 
