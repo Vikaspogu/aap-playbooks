@@ -18,6 +18,5 @@
         scsihw: 'virtio-scsi-single'
         scsi:
           scsi0: '{{ storage_type }}:{{ disk_size }},iothread=1,format=raw'
-        sshkeys: '{{ ssh_keys }}'
         net:
           net0: 'virtio={{ mac_address }},bridge=vmbr0,firewall=1'

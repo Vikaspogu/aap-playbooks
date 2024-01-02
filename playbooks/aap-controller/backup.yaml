@@ -2,16 +2,16 @@
 - name: Playbook to setup Ansible Automation Platform
   hosts: aap-controller
   gather_facts: false
+  become: true
+  roles:
+    - infra.aap_utilities.aap_backup
+  vars:
+    aap_setup_prep_setup_dir: /var/tmp/ansible-automation-platform-setup-bundle-2.4-3-x86_64/
+    aap_backup_dest: /aap_backups/
   tasks:
-    - name: Create backup
-      become: true
-      ansible.builtin.command:
-        cmd: ./setup.sh -b
-        chdir: /home/{{ ansible_user }}/ansible-automation-platform-setup-bundle-2.4-3-x86_64
-
     - name: Use a single pattern that contains a comma formatted as a list
       ansible.builtin.find:
-        paths: /home/{{ ansible_user }}/ansible-automation-platform-setup-bundle-2.4-3-x86_64
+        paths: '{{ aap_backup_dest }}'
         pattern:
           - '*backup*'
       register: find_file_result

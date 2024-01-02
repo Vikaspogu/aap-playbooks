@@ -1,0 +1,84 @@
+---
+- name: Create RHEL VM template
+  ansible.builtin.import_playbook: '../proxmox/create-vm-template.yaml'
+  vars:
+    image_url: https://access.cdn.redhat.com/content/origin/files/sha256/fa/fafa0b90267206cb5c7d41fcadea245918ae7aca9997b87397d845e63bdabeec/rhel-9.3-x86_64-kvm.qcow2?user=c490ef09a025ffa9dce940a86ee25e86&_auth_=1704230556_0fcec0dac11771d08786ce95d0996283
+    image_path: /tmp/rhel-9.3-x86_64-kvm.qcow2
+    id: 9000
+    name: rhel-9.3-cloudinit-template
+
+- name: Import CloudInit VM
+  ansible.builtin.import_playbook: '../proxmox/create-cloudinit-vm.yaml'
+  vars:
+    vm_name: aap-controller
+    template_name: rhel-9.3-cloudinit-template
+    mac_address: bc:24:11:a0:6e:7a
+    cores: 4
+    memory: 16384
+    disk_size: 212G
+
+- name: Start AAP VM
+  ansible.builtin.import_playbook: '../proxmox/start-vm.yaml'
+  vars:
+    vm_name: aap-controller
+
+- name: Playbook to Create VM template
+  hosts: aap-controller
+  gather_facts: false
+  tasks:
+    - name: Wait 600 seconds for target connection to become reachable/usable
+      ansible.builtin.wait_for_connection:
+        delay: 30
+        timeout: 600
+
+- name: Download and install AAP on the controller
+  hosts: aap-controller
+  gather_facts: false
+  become: false
+  tags: aap_installation
+  roles:
+    - infra.aap_utilities.aap_setup_download
+    - infra.aap_utilities.aap_setup_prepare
+    - infra.aap_utilities.aap_setup_install
+  vars_files:
+    - ../../vars/aap-inventory.yaml
+  pre_tasks:
+    - name: Install required packages
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - glibc-langpack-en
+          - ansible-core
+          - git
+          - wget
+          - unzip
+          - tar
+          - rsync
+          - python3
+          - python3-pip
+
+    - name: Install boto and botocore python package
+      become: true
+      ansible.builtin.pip:
+        name:
+          - boto3
+          - botocore
+
+  post_tasks:
+    - name: Create sops directory
+      become_user: awx
+      become: true
+      ansible.builtin.file:
+        path: /var/lib/awx/.sops-key
+        state: directory
+        mode: '0644'
+
+    - name: Copy sops key
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        src: '/Users/vikaspogu/.config/sops/age/keys.txt'
+        dest: '/var/lib/awx/.sops-key/keys.txt'
+        mode: '0644'
+        owner: awx
+        group: awx

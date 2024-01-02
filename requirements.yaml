@@ -11,3 +11,10 @@ collections:
   - name: kubernetes.core
     version: 3.0.0
   - name: ansibleguy.opnsense
+    version: 1.2.8
+  - name: awx.awx
+    version: 23.5.1
+  - name: infra.controller_configuration
+    version: 2.6.0
+  - name: infra.aap_utilities
+    version: 2.3.0

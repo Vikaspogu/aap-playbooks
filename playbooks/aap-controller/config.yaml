@@ -1,0 +1,149 @@
+---
+- name: Playbook to configure ansible controller post installation
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ../../vars/aap-inventory.yaml
+  tasks:
+    - name: Create an inventory
+      awx.awx.inventory:
+        name: '{{ awx_inventory_name }}'
+        organization: Default
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+
+    - name: Add hosts to inventory
+      awx.awx.host:
+        name: '{{  item }}'
+        inventory: '{{ awx_inventory_name }}'
+        state: present
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+      loop:
+        - proxmox
+        - aap-controller
+
+    - name: Machine Credentials
+      awx.awx.credential:
+        name: Host Credentials
+        credential_type: Machine
+        organization: Default
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+        inputs:
+          username: '{{ host_user }}'
+          password: '{{ host_password }}'
+
+    - name: Quay Credentials
+      awx.awx.credential:
+        name: Quay Credentials
+        credential_type: Container Registry
+        organization: Default
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+        inputs:
+          host: quay.io
+          username: '{{ quay_username }}'
+          password: '{{ quay_password }}'
+
+    - name: Ansible Vault Credentials
+      awx.awx.credential:
+        name: Vault Credentials
+        credential_type: Vault
+        organization: Default
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+        inputs:
+          vault_password: '{{ vault_password }}'
+
+    - name: Add EE to the controller instance
+      awx.awx.execution_environment:
+        name: 'Custom EE'
+        image: quay.io/rhn_gps_vpogu/custom-aap24-ee-rhel8@sha256:f621dfc4ebaf5539e58f5718677d784a366e191eb06021d1f69fd8c01f175fc0
+        credential: 'Quay Credentials'
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+
+    - name: '{{ awx_project_name }}'
+      awx.awx.project:
+        name: '{{ awx_project_name }}'
+        organization: Default
+        state: present
+        scm_update_on_launch: true
+        scm_delete_on_update: true
+        scm_type: git
+        default_environment: 'Custom EE'
+        scm_url: https://github.com/Vikaspogu/homelab-playbooks.git
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+
+    - name: Create a Job Template
+      awx.awx.job_template:
+        name: Proxmox - {{ item.name }}
+        organization: Default
+        state: present
+        inventory: '{{ awx_inventory_name }}'
+        become_enabled: true
+        playbook: '{{ item.file }}'
+        project: '{{ awx_project_name }}'
+        execution_environment: 'Custom EE'
+        credentials:
+          - 'Host Credentials'
+          - 'Vault Credentials'
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+        survey_enabled: '{{ item.enable_survery }}'
+        survey_spec: "{{ lookup('file', 'surveys/{{item.survery_file}}') }}"
+      loop:
+        - {
+            name: 'Create VM',
+            file: playbooks/proxmox/create-vm.yaml,
+            enable_survery: true,
+            survery_file: 'create-vm.json',
+          }
+        - {
+            name: 'Create a VM with disk',
+            file: playbooks/proxmox/create-vm-disk.yaml,
+            enable_survery: true,
+            survery_file: 'create-vm-disk.json',
+          }
+        - {
+            name: 'Delete VM',
+            file: playbooks/proxmox/delete-vm.yaml,
+            enable_survery: true,
+            survery_file: 'delete-vm.json',
+          }
+        - {
+            name: 'Mount ISO',
+            file: playbooks/proxmox/mount-iso.yaml,
+            enable_survery: true,
+            survery_file: 'mount-iso.json',
+          }
+        - {
+            name: 'Start VM',
+            file: playbooks/proxmox/start-vm.yaml,
+            enable_survery: true,
+            survery_file: 'start-vm.json',
+          }
+        - {
+            name: 'Upload ISO from URL',
+            file: playbooks/proxmox/upload-iso.yaml,
+            enable_survery: true,
+            survery_file: 'upload-iso.json',
+          }
