@@ -2,7 +2,6 @@
 - name: Create RHEL VM template
   ansible.builtin.import_playbook: '../proxmox/create-vm-template.yaml'
   vars:
-    image_url: https://access.cdn.redhat.com/content/origin/files/sha256/fa/fafa0b90267206cb5c7d41fcadea245918ae7aca9997b87397d845e63bdabeec/rhel-9.3-x86_64-kvm.qcow2?user=c490ef09a025ffa9dce940a86ee25e86&_auth_=1704230556_0fcec0dac11771d08786ce95d0996283
     image_path: /tmp/rhel-9.3-x86_64-kvm.qcow2
     id: 9000
     name: rhel-9.3-cloudinit-template
