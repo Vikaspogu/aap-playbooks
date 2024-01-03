@@ -8,7 +8,7 @@
       "question_description": "What is the name of the VM",
       "variable": "vm_name",
       "min": 1,
-      "max": 10,
+      "max": 25,
       "required": true,
       "default": ""
     },
@@ -28,7 +28,7 @@
       "question_description": "Type of the storage",
       "variable": "storage_type",
       "min": 1,
-      "max": 10,
+      "max": 25,
       "required": false,
       "default": "lvm-nvme"
     },
@@ -40,7 +40,7 @@
       "min": 1,
       "max": 9,
       "required": false,
-      "default": "200G"
+      "default": "200"
     }
   ]
 }

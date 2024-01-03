@@ -1,11 +1,11 @@
 ---
-- name: Playbook to create a disk and attach to VM
+- name: Playbook to attach additional disk to VM
   hosts: localhost
   gather_facts: false
   vars_files:
     - ../../vars/proxmox.yaml
   tasks:
-    - name: Create a disk and attach to VM
+    - name: Attach additional disk to VM
       community.general.proxmox_disk:
         api_user: '{{ datacenter.username }}@pve'
         api_password: '{{ datacenter.password }}'

@@ -8,7 +8,7 @@
       "question_description": "What is the name of the VM",
       "variable": "vm_name",
       "min": 1,
-      "max": 10,
+      "max": 25,
       "required": true,
       "default": ""
     },
@@ -18,9 +18,9 @@
       "question_description": "Name of the ISO",
       "variable": "iso_name",
       "min": 1,
-      "max": 10,
+      "max": 25,
       "required": false,
-      "default": ""
+      "default": "agent.x86_64.iso"
     }
   ]
 }

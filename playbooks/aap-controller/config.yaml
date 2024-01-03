@@ -91,6 +91,69 @@
         controller_password: '{{ controller_password }}'
         validate_certs: false
 
+    - name: Create a Job Template with Survery
+      awx.awx.job_template:
+        name: '{{ item.name }}'
+        organization: Default
+        state: present
+        inventory: '{{ awx_inventory_name }}'
+        become_enabled: true
+        playbook: '{{ item.file }}'
+        project: '{{ awx_project_name }}'
+        execution_environment: 'Custom EE'
+        credentials:
+          - 'Host Credentials'
+          - 'Vault Credentials'
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+        survey_enabled: '{{ item.enable_survery }}'
+        survey_spec: "{{ lookup('file', '{{item.survey_file}}') }}"
+      loop:
+        - {
+            name: 'Proxmox - Create VM',
+            file: playbooks/proxmox/create-vm.yaml,
+            enable_survery: true,
+            survey_file: 'surveys/create-vm.json',
+          }
+        - {
+            name: 'Proxmox - Attach additional disk to VM',
+            file: playbooks/proxmox/attach-additional-disk.yaml,
+            enable_survery: true,
+            survey_file: 'surveys/attach-additional-disk.json',
+          }
+        - {
+            name: 'Proxmox - Delete VM',
+            file: playbooks/proxmox/delete-vm.yaml,
+            enable_survery: true,
+            survey_file: 'surveys/delete-vm.json',
+          }
+        - {
+            name: 'Proxmox - Mount ISO',
+            file: playbooks/proxmox/mount-iso.yaml,
+            enable_survery: true,
+            survey_file: 'surveys/mount-iso.json',
+          }
+        - {
+            name: 'Proxmox - Start VM',
+            file: playbooks/proxmox/start-vm.yaml,
+            enable_survery: true,
+            survey_file: 'surveys/start-vm.json',
+          }
+        - {
+            name: 'Proxmox - Upload ISO from URL',
+            file: playbooks/proxmox/upload-iso.yaml,
+            enable_survery: true,
+            survey_file: 'surveys/upload-iso.json',
+          }
+        - {
+            name: 'OpenShift - Prepare ACM Cluster ISO',
+            file: playbooks/openshift/prepare-acm-iso.yaml,
+            enable_survery: true,
+            survey_file: '../openshift/surveys/prepare-acm-iso.json',
+          }
+
     - name: Create a Job Template
       awx.awx.job_template:
         name: Proxmox - {{ item.name }}
@@ -108,69 +171,148 @@
         controller_username: '{{ controller_username }}'
         controller_password: '{{ controller_password }}'
         validate_certs: false
-        survey_enabled: '{{ item.enable_survery }}'
-        survey_spec: "{{ lookup('file', 'surveys/{{item.survery_file}}') }}"
       loop:
         - {
-            name: 'Create VM',
-            file: playbooks/proxmox/create-vm.yaml,
-            enable_survery: true,
-            survery_file: 'create-vm.json',
-          }
-        - {
-            name: 'Create a VM with disk',
-            file: playbooks/proxmox/create-vm-disk.yaml,
-            enable_survery: true,
-            survery_file: 'create-vm-disk.json',
-          }
-        - {
-            name: 'Delete VM',
-            file: playbooks/proxmox/delete-vm.yaml,
-            enable_survery: true,
-            survery_file: 'delete-vm.json',
-          }
-        - {
-            name: 'Mount ISO',
-            file: playbooks/proxmox/mount-iso.yaml,
-            enable_survery: true,
-            survery_file: 'mount-iso.json',
-          }
-        - {
-            name: 'Start VM',
-            file: playbooks/proxmox/start-vm.yaml,
-            enable_survery: true,
-            survery_file: 'start-vm.json',
-          }
-        - {
-            name: 'Upload ISO from URL',
-            file: playbooks/proxmox/upload-iso.yaml,
-            enable_survery: true,
-            survery_file: 'upload-iso.json',
+            name: 'OpenShift - Prepare SNO Cluster ISO',
+            file: playbooks/openshift/prepare-sno-iso.yaml,
           }
 
-    # - name: Create a Workflow Template
-    #   awx.awx.workflow_job_template:
-    #     name: '{{ item.name }}'
-    #     inventory: '{{ awx_inventory_name }}'
-    #     controller_host: '{{ controller_hostname }}'
-    #     controller_username: '{{ controller_username }}'
-    #     controller_password: '{{ controller_password }}'
-    #     validate_certs: false
-    #     workflow_nodes:
-    #       - identifier: node201
-    #         unified_job_template:
-    #           organization:
-    #             name: Default
-    #           name: job template 1
-    #           type: job_template
-    #         credentials: []
-    #         related:
-    #           success_nodes:
-    #             - identifier: node301
-    #           failure_nodes: []
-    #           always_nodes: []
-    #           credentials: []
-    #   loop:
-    #     - { name: "OpenShift - Destroy Cluster" }
-    #     - { name: "OpenShift - Create SNO Cluster" }
-    #     - { name: "OpenShift - Create 3 Node ACM Cluster" }
+    - name: Create a Workflow Template
+      awx.awx.workflow_job_template:
+        name: 'OpenShift - Create 3 Node ACM Cluster'
+        inventory: '{{ awx_inventory_name }}'
+        controller_host: '{{ controller_hostname }}'
+        controller_username: '{{ controller_username }}'
+        controller_password: '{{ controller_password }}'
+        validate_certs: false
+        workflow_nodes:
+          - identifier: Prepare ISO
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'OpenShift - Prepare ACM Cluster ISO'
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: 'Create VM openshift-0'
+                - identifier: 'Create VM openshift-1'
+                - identifier: 'Create VM openshift-2'
+          - identifier: Create VM openshift-0
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Create VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-0
+              cores: '12'
+              memory: '51234'
+              disk_size: '200'
+              mac_address: '52:50:56:11:22:11'
+            related:
+              success_nodes:
+                - identifier: 'Mount ISO openshift-0'
+          - identifier: Create VM openshift-1
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Create VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-1
+              cores: '12'
+              memory: '51234'
+              disk_size: '200'
+              mac_address: '52:50:56:11:22:22'
+            related:
+              success_nodes:
+                - identifier: 'Mount ISO openshift-1'
+          - identifier: Create VM openshift-2
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Create VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-2
+              cores: '12'
+              memory: '51234'
+              disk_size: '200'
+              mac_address: '52:50:56:11:22:33'
+            related:
+              success_nodes:
+                - identifier: 'Mount ISO openshift-2'
+          - identifier: Mount ISO openshift-0
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Mount ISO'
+              type: job_template
+            extra_data:
+              vm_name: openshift-0
+            related:
+              success_nodes:
+                - identifier: 'Start VM openshift-0'
+          - identifier: Mount ISO openshift-1
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Mount ISO'
+              type: job_template
+            extra_data:
+              vm_name: openshift-1
+            related:
+              success_nodes:
+                - identifier: 'Additional disk openshift-1'
+          - identifier: Additional disk openshift-1
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Proxmox - Attach additional disk to VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-1
+            related:
+              success_nodes:
+                - identifier: 'Start VM openshift-1'
+          - identifier: Mount ISO openshift-2
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Mount ISO'
+              type: job_template
+            extra_data:
+              vm_name: openshift-2
+            related:
+              success_nodes:
+                - identifier: 'Start VM openshift-2'
+          - identifier: Start VM openshift-0
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Start VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-0
+            related:
+              success_nodes: []
+          - identifier: Start VM openshift-1
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Start VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-1
+            related:
+              success_nodes: []
+          - identifier: Start VM openshift-2
+            unified_job_template:
+              organization:
+                name: Default
+              name: 'Proxmox - Start VM'
+              type: job_template
+            extra_data:
+              vm_name: openshift-2
+            related:
+              success_nodes: []
