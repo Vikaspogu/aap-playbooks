@@ -2,3 +2,4 @@
 packages/
 .vault_pass
 .vscode
+manifest*

@@ -5,7 +5,6 @@
     organization: Default
     state: present
     inventory: '{{ awx_inventory_name }}'
-    become_enabled: true
     playbook: '{{ item.file }}'
     project: '{{ awx_project_name }}'
     execution_environment: 'Custom EE'
