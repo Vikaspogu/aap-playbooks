@@ -147,3 +147,30 @@
             enable_survery: true,
             survery_file: 'upload-iso.json',
           }
+
+    # - name: Create a Workflow Template
+    #   awx.awx.workflow_job_template:
+    #     name: '{{ item.name }}'
+    #     inventory: '{{ awx_inventory_name }}'
+    #     controller_host: '{{ controller_hostname }}'
+    #     controller_username: '{{ controller_username }}'
+    #     controller_password: '{{ controller_password }}'
+    #     validate_certs: false
+    #     workflow_nodes:
+    #       - identifier: node201
+    #         unified_job_template:
+    #           organization:
+    #             name: Default
+    #           name: job template 1
+    #           type: job_template
+    #         credentials: []
+    #         related:
+    #           success_nodes:
+    #             - identifier: node301
+    #           failure_nodes: []
+    #           always_nodes: []
+    #           credentials: []
+    #   loop:
+    #     - { name: "OpenShift - Destroy Cluster" }
+    #     - { name: "OpenShift - Create SNO Cluster" }
+    #     - { name: "OpenShift - Create 3 Node ACM Cluster" }
