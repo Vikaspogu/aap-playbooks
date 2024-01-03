@@ -1,0 +1,56 @@
+---
+- name: Create SNO cluster Workflow Template
+  awx.awx.workflow_job_template:
+    name: 'OpenShift - Create SNO Cluster'
+    inventory: '{{ awx_inventory_name }}'
+    controller_host: '{{ controller_hostname }}'
+    controller_username: '{{ controller_username }}'
+    controller_password: '{{ controller_password }}'
+    validate_certs: false
+    workflow_nodes:
+      - identifier: Prepare SNO ISO
+        unified_job_template:
+          organization:
+            name: Default
+          name: 'OpenShift - Prepare SNO Cluster ISO'
+          type: job_template
+        related:
+          success_nodes:
+            - identifier: 'Create VM pxm-sno'
+      - identifier: Create VM pxm-sno
+        unified_job_template:
+          organization:
+            name: Default
+          name: 'Proxmox - Create VM'
+          type: job_template
+        extra_data:
+          vm_name: pxm-sno
+          cores: '12'
+          memory: '51234'
+          disk_size: '200'
+          mac_address: '52:50:56:11:22:44'
+        related:
+          success_nodes:
+            - identifier: 'Mount ISO pxm-sno'
+      - identifier: Mount ISO pxm-sno
+        unified_job_template:
+          organization:
+            name: Default
+          name: 'Proxmox - Mount ISO'
+          type: job_template
+        extra_data:
+          vm_name: pxm-sno
+          iso_name: sno.iso
+        related:
+          success_nodes:
+            - identifier: 'Start VM pxm-sno'
+      - identifier: Start VM pxm-sno
+        unified_job_template:
+          organization:
+            name: Default
+          name: 'Proxmox - Start VM'
+          type: job_template
+        extra_data:
+          vm_name: pxm-sno
+        related:
+          success_nodes: []

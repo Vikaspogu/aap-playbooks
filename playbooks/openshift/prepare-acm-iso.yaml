@@ -42,7 +42,7 @@
 
     - name: Run the agent create
       ansible.builtin.command:
-        cmd: openshift-install agent create image --dir installer/cluster-config
+        cmd: /usr/local/bin/openshift-install agent create image --dir installer/cluster-config
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
     - name: Fetch ISO image to localhost

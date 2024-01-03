@@ -1,5 +1,5 @@
 ---
-- name: Playbook to prepare VM for openshift installer
+- name: Playbook to download ISO for openshift installer
   hosts: aap-controller
   gather_facts: false
   tasks:
