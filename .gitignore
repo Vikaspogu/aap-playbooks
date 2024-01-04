@@ -3,5 +3,4 @@ packages/
 .vault_pass
 .vscode
 manifest*
-kubeadmin-password
-kubeconfig
+kube*

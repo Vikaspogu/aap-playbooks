@@ -8,6 +8,18 @@ This repository contains playbooks to automate the following tasks on proxmox vi
 - Configure Job and Workflow templates using [awx](https://docs.ansible.com/ansible/latest/collections/awx/awx/index.html) modules
   - Workflow template to create three node openshift cluster
 
+## Prepare, Download & Setup AAP
+
+```yaml
+ansible-playbook -i inventory/hosts.yaml playbooks/aap-controller/create.yaml -e "aap_setup_down_offline_token=..."
+```
+
+## Configure AAP
+
+```yaml
+ansible-playbook playbooks/aap-controller/config.yaml
+```
+
 ## Resources
 
 - Generate offline [token](https://access.redhat.com/articles/3626371)
