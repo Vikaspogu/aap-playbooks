@@ -23,3 +23,4 @@ ansible-playbook playbooks/aap-controller/config.yaml
 ## Resources
 
 - Generate offline [token](https://access.redhat.com/articles/3626371)
+- [API](https://access.redhat.com/management/api) documentation
