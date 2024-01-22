@@ -73,8 +73,41 @@
             - name: Access control
               ansible.builtin.shell: pveum aclmod / -user {{ datacenter.username }}@pve -role AutomationProv
 
+        - name: Check if api user exists
+          ansible.builtin.shell: pveum user list
+          register: pvenum_user
+          changed_when: false
+
+        - name: Create api user if it doesnt exists
+          when: '"api@pam" not in pvenum_user.stdout'
+          block:
+            - name: Create API group
+              ansible.builtin.shell: pveum group add api-ro-users -comment "Informative comment"
+            - name: Create ACL groups
+              ansible.builtin.shell: pveum aclmod / -group api-ro-users -role PVEAuditor -propagate 1
+            - name: Create API user
+              ansible.builtin.shell: pveum user add api@pam -group api-ro-users -comment "Informative comment"
+            - name: Create API token
+              ansible.builtin.shell: pveum user token add api@pam homepage -privsep 1
+              register: token_out
+            - name: Print token
+              ansible.builtin.debug:
+                var: token_out.stdout_lines
+            - name: Create ACL role
+              ansible.builtin.shell: pveum aclmod / -token 'api@pam!homepage' -role PVEAuditor -propagate 1
+
+        - name: Create homeassistant user if it doesnt exists
+          when: '"homeassistant@pve" not in pvenum_user.stdout'
+          block:
+            - name: Create API group
+              ansible.builtin.shell: pveum groupadd homeassistant -comment "Group for Home Assistant"
+            - name: Create ACL groups
+              ansible.builtin.shell: pveum aclmod / -group homeassistant -role PVEAuditor -propagate 1
+            - name: Create a user
+              ansible.builtin.shell: pveum user add homeassistant@pve -group homeassistant -password {{datacenter.hass_user_password}} -comment "User for Home Assistant" -expire 1 -enable 1
+
         - name: Check whether interfaces contains offloading feature
-          command: grep -Fxq "pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off" /etc/network/interfaces
+          ansible.builtin.command: grep -Fxq "pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off" /etc/network/interfaces
           register: check_offloading_feature
           check_mode: false
           ignore_errors: true
