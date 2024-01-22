@@ -10,7 +10,7 @@
         api_user: '{{ datacenter.username }}@pve'
         api_password: '{{ datacenter.password }}'
         api_host: '{{ datacenter.ip }}'
-        node: pve
+        node: '{{ datacenter.node }}'
         name: '{{ vm_name }}'
       register: vm_info
       delegate_to: localhost
@@ -20,7 +20,7 @@
       block:
         - name: Create a VM
           community.general.proxmox_kvm:
-            node: pve
+            node: '{{ datacenter.node }}'
             api_user: '{{ datacenter.username }}@pve'
             api_password: '{{ datacenter.password }}'
             api_host: '{{ datacenter.ip }}'

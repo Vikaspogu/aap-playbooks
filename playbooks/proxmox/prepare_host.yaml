@@ -3,7 +3,7 @@
   hosts: proxmox
   gather_facts: false
   vars_files:
-    - ../../vars/proxmox.yml
+    - ../../vars/proxmox.yaml
   tasks:
     - name: Prepare proxmox
       notify:
@@ -57,7 +57,7 @@
           changed_when: false
 
         - name: Create automation role
-          ansible.builtin.shell: pveum role add AutomationProv -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit Sys.Modify"
+          ansible.builtin.shell: pveum role add AutomationProv -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit Sys.Modify SDN.Use"
           when: '"AutomationProv" not in pvenum_role.stdout'
 
         - name: Check if automation user exists
@@ -65,13 +65,13 @@
           register: pvenum_user
           changed_when: false
 
-        - name: Create automation user
-          ansible.builtin.shell: pveum user add {{ username }}@pve --password {{ password }}
-          when: '"{{ username }}@pve" not in pvenum_user.stdout'
-
-        - name: Access control
-          ansible.builtin.shell: pveum aclmod / -user {{ username }}@pve -role AutomationProv
-          when: '"{{ username }}@pve" not in pvenum_user.stdout'
+        - name: Only when user doesn't exist
+          when: '"{{ datacenter.username }}@pve" not in pvenum_user.stdout'
+          block:
+            - name: Create automation user
+              ansible.builtin.shell: pveum user add {{ datacenter.username }}@pve --password {{ datacenter.password }}
+            - name: Access control
+              ansible.builtin.shell: pveum aclmod / -user {{ datacenter.username }}@pve -role AutomationProv
 
         - name: Check whether interfaces contains offloading feature
           command: grep -Fxq "pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off" /etc/network/interfaces
@@ -88,6 +88,53 @@
               pre-up /sbin/ethtool --offload vmbr0 gso off tso off sg off gro off
               pre-up /sbin/ethtool --offload enp0s25 gso off tso off sg off gro off
           when: check_offloading_feature.rc == 1
+
+        - name: Ensure iommu is enabled in default grub command line
+          ansible.builtin.lineinfile:
+            path: '/etc/default/grub'
+            backrefs: true
+            regexp: '^#?(GRUB_CMDLINE_LINUX_DEFAULT=.*)quiet"$'
+            line: '\1quiet intel_iommu=on"'
+          register: iommu_result
+
+        - name: Ensure vfio modules are loaded at boot
+          ansible.builtin.lineinfile:
+            path: '/etc/modules'
+            line: '{{ item }}'
+          register: vfio_result
+          with_items:
+            - vfio
+            - vfio_iommu_type1
+            - vfio_pci
+            - vfio_virqfd
+
+        - name: Ensure graphics drivers are blacklisted
+          ansible.builtin.lineinfile:
+            path: '/etc/modprobe.d/blacklist.conf'
+            create: true
+            line: 'blacklist {{ item }}'
+          register: drivers_result
+          with_items:
+            - radeon
+            - nouveau
+            - nvidia
+
+        - name: Ensure unsafe interrupts are allowed
+          ansible.builtin.lineinfile:
+            path: '/etc/modprobe.d/iommu_unsafe_interrupts.conf'
+            create: true
+            line: 'options vfio_iommu_type1 allow_unsafe_interrupts=1'
+          register: unsafe_interrupts_result
+
+        - name: Update grub configuration (need reboot if changes)
+          ansible.builtin.shell: update-grub
+          register: pci_grub_result
+          when: iommu_result.changed or
+            vfio_result.changed or
+            drivers_result.changed or
+            unsafe_interrupts_result.changed
+          failed_when: pci_grub_result.rc != 0
+          changed_when: pci_grub_result.rc == 0
 
   handlers:
     - name: Reboot
