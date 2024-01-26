@@ -8,7 +8,7 @@
     CONTROLLER_PASSWORD: '{{ controller_password }}'
     CONTROLLER_VERIFY_SSL: 'false'
   vars_files:
-    - ../../vars/aap-inventory.yaml
+    - ../../vars/aap-inventory.vault.yaml
   tasks:
     - name: Create an inventory
       awx.awx.inventory:

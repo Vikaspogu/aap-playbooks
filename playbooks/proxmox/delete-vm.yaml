@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - ../../vars/proxmox.yaml
+    - ../../vars/proxmox.vault.yaml
   tasks:
     - name: Delete a VM
       community.general.proxmox_kvm:

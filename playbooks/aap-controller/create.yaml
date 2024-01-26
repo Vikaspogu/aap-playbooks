@@ -39,7 +39,7 @@
     - infra.aap_utilities.aap_setup_prepare
     - infra.aap_utilities.aap_setup_install
   vars_files:
-    - ../../vars/aap-inventory.yaml
+    - ../../vars/aap-inventory.vault.yaml
   pre_tasks:
     - name: Install required packages
       become: true

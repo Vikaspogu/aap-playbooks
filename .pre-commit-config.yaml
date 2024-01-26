@@ -33,3 +33,7 @@ repos:
     rev: 'v3.1.0' # Use the sha or tag you want to point at
     hooks:
       - id: prettier
+  - repo: https://github.com/biozz/ansible-pre-commit-hooks
+    rev: v0.0.1
+    hooks:
+      - id: ansible-vault-encrypted

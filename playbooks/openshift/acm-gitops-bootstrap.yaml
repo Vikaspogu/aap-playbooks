@@ -5,7 +5,7 @@
   environment:
     K8S_AUTH_KUBECONFIG: '/home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/auth/kubeconfig'
   vars_files:
-    - ../../vars/aap-inventory.yaml
+    - ../../vars/aap-inventory.vault.yaml
   tasks:
     - name: Provision bootstrapping argocd operator
       kubernetes.core.k8s:

@@ -3,7 +3,7 @@
   hosts: proxmox
   gather_facts: false
   vars_files:
-    - ../../vars/proxmox.yaml
+    - ../../vars/proxmox.vault.yaml
   tasks:
     - name: Download ISO from URL as a variable and upload to proxmox as ISO
       ansible.builtin.get_url:
