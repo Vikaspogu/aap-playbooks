@@ -21,6 +21,11 @@
         name:
           - nmstate
 
+    - name: Install python packages
+      ansible.builtin.pip:
+        name:
+          - kubernetes
+
     - name: Delete content & directory
       ansible.builtin.file:
         state: absent

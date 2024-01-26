@@ -2,6 +2,11 @@
 - name: Playbook to configure ansible controller post installation
   hosts: localhost
   connection: local
+  environment:
+    CONTROLLER_HOST: '{{ controller_hostname }}'
+    CONTROLLER_USERNAME: '{{ controller_username }}'
+    CONTROLLER_PASSWORD: '{{ controller_password }}'
+    CONTROLLER_VERIFY_SSL: 'false'
   vars_files:
     - ../../vars/aap-inventory.yaml
   tasks:
@@ -9,20 +14,12 @@
       awx.awx.inventory:
         name: '{{ awx_inventory_name }}'
         organization: Default
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
 
     - name: Machine Credentials
       awx.awx.credential:
         name: Host Credentials
         credential_type: Machine
         organization: Default
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
         inputs:
           username: '{{ host_user }}'
           password: '{{ host_password }}'
@@ -33,10 +30,6 @@
         name: Quay Credentials
         credential_type: Container Registry
         organization: Default
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
         inputs:
           host: quay.io
           username: '{{ quay_username }}'
@@ -47,10 +40,6 @@
         name: Vault Credentials
         credential_type: Vault
         organization: Default
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
         inputs:
           vault_password: '{{ vault_password }}'
 
@@ -59,10 +48,6 @@
         name: 'Custom EE'
         image: quay.io/rhn_gps_vpogu/custom-aap24-ee-rhel8@sha256:f621dfc4ebaf5539e58f5718677d784a366e191eb06021d1f69fd8c01f175fc0
         credential: 'Quay Credentials'
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
 
     - name: '{{ awx_project_name }}'
       awx.awx.project:
@@ -74,10 +59,6 @@
         scm_type: git
         default_environment: 'Custom EE'
         scm_url: https://github.com/Vikaspogu/homelab-playbooks.git
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
 
     - name: Add inventory source to inventory
       awx.awx.inventory_source:
@@ -87,10 +68,6 @@
         overwrite: true
         update_on_launch: true
         organization: Default
-        controller_host: '{{ controller_hostname }}'
-        controller_username: '{{ controller_username }}'
-        controller_password: '{{ controller_password }}'
-        validate_certs: false
         source: 'scm'
         source_project: '{{ awx_project_name }}'
         source_path: 'inventory/hosts.yaml'

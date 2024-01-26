@@ -1,0 +1,57 @@
+---
+- name: Playbook to prepare VM for openshift installer
+  hosts: aap-controller
+  gather_facts: false
+  environment:
+    K8S_AUTH_KUBECONFIG: '/home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/auth/kubeconfig'
+  vars_files:
+    - ../../vars/aap-inventory.yaml
+  tasks:
+    - name: Provision bootstrapping argocd operator
+      kubernetes.core.k8s:
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='github.com/Vikaspogu/openshift-multicluster/kustomize/bases/openshift-gitops-operator') }}"
+
+    - name: Wait till the openshift-gitops-server pods is created
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: openshift-gitops
+      register: pod_list
+      until: pod_list | json_query('resources[*].status.phase') | unique == ["Running"]
+      retries: 30
+      delay: 60
+
+    - name: Check if secret exists
+      kubernetes.core.k8s_info:
+        kind: Secret
+        name: sops-age
+        namespace: openshift-gitops
+      register: secret_result
+
+    - name: Create SOPS secret
+      when: secret_result.resources | length == 0
+      block:
+        - name: Read definition template file from the Ansible controller file system
+          kubernetes.core.k8s:
+            state: present
+            template: '../../templates/sops-secret.yaml.j2'
+
+    - name: Update openshift-gitops instance
+      kubernetes.core.k8s:
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='github.com/Vikaspogu/openshift-multicluster/kustomize/bases/openshift-gitops-config') }}"
+
+    - name: Wait till the openshift-gitops-server pods is created
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: openshift-gitops
+      register: pod_list
+      until: pod_list | json_query('resources[*].status.phase') | unique == ["Running"]
+      retries: 30
+      delay: 60
+
+    - name: Deploy argo-application chart from local path
+      kubernetes.core.helm:
+        name: argo-application
+        chart_ref: '/home/{{ ansible_user }}/openshift-multicluster/helm/charts/argo-application'
+        release_namespace: argo-application
+        values:
+          clusterName: pxm-acm
