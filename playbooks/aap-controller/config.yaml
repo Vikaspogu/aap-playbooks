@@ -75,34 +75,34 @@
     - name: Create a Job Template with survey
       ansible.builtin.import_tasks: job_templates/job-template-survey.yaml
       register: job_templates_survery
-      until: 'job_templates_survery is not failed'
+      until: not job_templates_survery.failed
       retries: 10
       delay: 10
 
     - name: Create a Job Template with no survey
       ansible.builtin.import_tasks: job_templates/job-template-no-survey.yaml
       register: job_templates
-      until: 'job_templates is not failed'
+      until: not job_templates.failed
       retries: 10
       delay: 10
 
     - name: Create 3 node ACM cluster workflow
       ansible.builtin.import_tasks: workflow_templates/acm-cluster.yaml
       register: acm_cluster_workflow
-      until: 'acm_cluster_workflow is not failed'
+      until: not acm_cluster_workflow.failed
       retries: 10
       delay: 10
 
     - name: Create SNO cluster workflow
       ansible.builtin.import_tasks: workflow_templates/sno-cluster.yaml
       register: sno_cluster_workflow
-      until: 'sno_cluster_workflow is not failed'
+      until: not sno_cluster_workflow.failed
       retries: 10
       delay: 10
 
     - name: Create destroy cluster workflow
       ansible.builtin.import_tasks: workflow_templates/destroy-cluster.yaml
       register: destroy_cluster_workflow
-      until: 'destroy_cluster_workflow is not failed'
+      until: not destroy_cluster_workflow.failed
       retries: 10
       delay: 10

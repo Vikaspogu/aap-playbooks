@@ -13,6 +13,7 @@
       loop:
         - https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/openshift-install-linux.tar.gz
         - https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/latest/openshift-client-linux.tar.gz
+        - https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/helm/3.12.1/helm-linux-amd64.tar.gz
         - https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.3.0/kustomize_v5.3.0_linux_amd64.tar.gz
 
     - name: Install Packages

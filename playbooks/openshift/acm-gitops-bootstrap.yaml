@@ -30,7 +30,7 @@
     - name: Create SOPS secret
       when: secret_result.resources | length == 0
       block:
-        - name: Read definition template file from the Ansible controller file system
+        - name: Create secret from the template
           kubernetes.core.k8s:
             state: present
             template: '../../templates/sops-secret.yaml.j2'
