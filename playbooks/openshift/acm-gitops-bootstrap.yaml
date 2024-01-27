@@ -52,6 +52,6 @@
       kubernetes.core.helm:
         name: argo-application
         chart_ref: '/home/{{ ansible_user }}/openshift-multicluster/helm/charts/argo-application'
-        release_namespace: argo-application
+        release_namespace: openshift-gitops
         values:
           clusterName: pxm-acm
