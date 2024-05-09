@@ -17,11 +17,6 @@
     validate_certs: false
   loop:
     - {
-        name: 'OpenShift - ACM GitOps Bootstrap',
-        file: playbooks/openshift/acm-gitops-bootstrap.yaml,
-      }
-
-    - {
         name: 'OpenShift - Prepare SNO Cluster ISO',
         file: playbooks/openshift/prepare-sno-iso.yaml,
       }

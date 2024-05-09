@@ -49,19 +49,19 @@
 
     - name: Add pull secret
       ansible.builtin.lineinfile:
-        path: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/install-config.yaml
+        path: /home/{{ ansible_user }}/openshift-multicluster/installer/dev-acm/install.yaml
         state: present
         regexp: 'pullSecret'
         line: "pullSecret: '{{ redhat_pull_secret }}'"
 
     - name: Run the agent create
       ansible.builtin.command:
-        cmd: /usr/local/bin/openshift-install agent create image --dir installer/cluster-config
+        cmd: /usr/local/bin/openshift-install agent create image --dir installer/dev-acm
         chdir: /home/{{ ansible_user }}/openshift-multicluster
 
     - name: Fetch ISO image to localhost
       ansible.builtin.fetch:
-        src: /home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/agent.x86_64.iso
+        src: /home/{{ ansible_user }}/openshift-multicluster/installer/dev-acm/agent.x86_64.iso
         dest: /tmp/
         flat: true
 

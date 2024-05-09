@@ -1,0 +1,14 @@
+{
+  "name": "Cluster Name",
+  "description": "Cluster Name",
+  "spec": [
+    {
+      "type": "text",
+      "question_name": "Name of the cluster to bootstrap",
+      "question_description": "Name of the cluster to bootstrap",
+      "variable": "cluster_name",
+      "required": true,
+      "default": ""
+    }
+  ]
+}

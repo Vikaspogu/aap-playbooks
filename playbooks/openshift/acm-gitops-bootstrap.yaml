@@ -3,7 +3,7 @@
   hosts: aap-controller
   gather_facts: false
   environment:
-    K8S_AUTH_KUBECONFIG: '/home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/auth/kubeconfig'
+    K8S_AUTH_KUBECONFIG: '/home/{{ ansible_user }}/openshift-multicluster/installer/dev-acm/auth/kubeconfig'
   vars_files:
     - ../../vars/aap-inventory.vault.yaml
   tasks:
@@ -54,4 +54,4 @@
         chart_ref: '/home/{{ ansible_user }}/openshift-multicluster/helm/charts/argo-application'
         release_namespace: openshift-gitops
         values:
-          clusterName: pxm-acm
+          clusterName: '{{ cluster_name }}'

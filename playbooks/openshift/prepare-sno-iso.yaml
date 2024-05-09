@@ -6,7 +6,7 @@
     - name: Get URL for SNO ISO
       become: true
       ansible.builtin.shell:
-        cmd: '/usr/local/bin/oc get infraenv homelab-inventory -n homelab-inventory  -o custom-columns=POD:.status.isoDownloadURL --no-headers --kubeconfig=/home/{{ ansible_user }}/openshift-multicluster/installer/cluster-config/auth/kubeconfig --insecure-skip-tls-verify=true'
+        cmd: '/usr/local/bin/oc get infraenv homelab-inventory -n homelab-inventory  -o custom-columns=POD:.status.isoDownloadURL --no-headers --kubeconfig=/home/{{ ansible_user }}/openshift-multicluster/installer/dev-acm/auth/kubeconfig --insecure-skip-tls-verify=true'
       register: sno_url
 
     - name: Download SNO ISO

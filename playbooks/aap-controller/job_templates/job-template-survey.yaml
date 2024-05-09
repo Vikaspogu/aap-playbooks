@@ -60,3 +60,9 @@
         enable_survey: true,
         survey_file: '../openshift/surveys/prepare-acm-iso.json',
       }
+    - {
+        name: 'OpenShift - ACM GitOps Bootstrap',
+        file: playbooks/openshift/acm-gitops-bootstrap.yaml,
+        enable_survey: true,
+        survey_file: '../openshift/surveys/acm-gitops-bootstrap.json',
+      }
