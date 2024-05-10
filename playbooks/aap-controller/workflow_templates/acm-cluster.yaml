@@ -18,125 +18,125 @@
           redhat_pull_secret: '{{ redhat_pull_secret | string }}'
         related:
           success_nodes:
-            - identifier: 'Create VM openshift-0'
-            - identifier: 'Create VM openshift-1'
-            - identifier: 'Create VM openshift-2'
-      - identifier: Create VM openshift-0
+            - identifier: 'Create VM One'
+            - identifier: 'Create VM Two'
+            - identifier: 'Create VM Three'
+      - identifier: Create VM One
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Create VM'
           type: job_template
         extra_data:
-          vm_name: openshift-0
+          vm_name: ocp-acm-0
           cores: '12'
           memory: '51234'
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
         related:
           success_nodes:
-            - identifier: 'Mount ISO openshift-0'
-      - identifier: Create VM openshift-1
+            - identifier: 'Mount ISO One'
+      - identifier: Create VM Two
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Create VM'
           type: job_template
         extra_data:
-          vm_name: openshift-1
+          vm_name: ocp-acm-1
           cores: '12'
           memory: '51234'
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
         related:
           success_nodes:
-            - identifier: 'Mount ISO openshift-1'
-      - identifier: Create VM openshift-2
+            - identifier: 'Mount ISO Two'
+      - identifier: Create VM Three
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Create VM'
           type: job_template
         extra_data:
-          vm_name: openshift-2
+          vm_name: ocp-acm-2
           cores: '12'
           memory: '51234'
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
         related:
           success_nodes:
-            - identifier: 'Mount ISO openshift-2'
-      - identifier: Mount ISO openshift-0
+            - identifier: 'Mount ISO Three'
+      - identifier: Mount ISO One
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: openshift-0
+          vm_name: ocp-acm-0
         related:
           success_nodes:
-            - identifier: 'Start VM openshift-0'
-      - identifier: Mount ISO openshift-1
+            - identifier: 'Start VM One'
+      - identifier: Mount ISO Two
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: openshift-1
+          vm_name: ocp-acm-1
         related:
           success_nodes:
-            - identifier: 'Additional disk openshift-1'
-      - identifier: Additional disk openshift-1
+            - identifier: 'Additional disk Two'
+      - identifier: Additional disk Two
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Attach additional disk to VM'
           type: job_template
         extra_data:
-          vm_name: openshift-1
+          vm_name: ocp-acm-1
         related:
           success_nodes:
-            - identifier: 'Start VM openshift-1'
-      - identifier: Mount ISO openshift-2
+            - identifier: 'Start VM Two'
+      - identifier: Mount ISO Three
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: openshift-2
+          vm_name: ocp-acm-2
         related:
           success_nodes:
-            - identifier: 'Start VM openshift-2'
-      - identifier: Start VM openshift-0
+            - identifier: 'Start VM Three'
+      - identifier: Start VM One
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Start VM'
           type: job_template
         extra_data:
-          vm_name: openshift-0
+          vm_name: ocp-acm-0
         related:
           success_nodes: []
-      - identifier: Start VM openshift-1
+      - identifier: Start VM Two
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Start VM'
           type: job_template
         extra_data:
-          vm_name: openshift-1
+          vm_name: ocp-acm-1
         related:
           success_nodes: []
-      - identifier: Start VM openshift-2
+      - identifier: Start VM Three
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Start VM'
           type: job_template
         extra_data:
-          vm_name: openshift-2
+          vm_name: ocp-acm-2
         related:
           success_nodes: []

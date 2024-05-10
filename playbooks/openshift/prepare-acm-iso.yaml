@@ -49,7 +49,7 @@
 
     - name: Add pull secret
       ansible.builtin.lineinfile:
-        path: /home/{{ ansible_user }}/openshift-multicluster/installer/dev-acm/install.yaml
+        path: /home/{{ ansible_user }}/openshift-multicluster/installer/dev-acm/install-config.yaml
         state: present
         regexp: 'pullSecret'
         line: "pullSecret: '{{ redhat_pull_secret }}'"
