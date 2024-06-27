@@ -29,8 +29,8 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-0
-          cores: '12'
-          memory: '51234'
+          cores: '15'
+          memory: '69632'
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
         related:
@@ -44,8 +44,8 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-1
-          cores: '12'
-          memory: '51234'
+          cores: '15'
+          memory: '69632'
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
         related:
@@ -59,8 +59,8 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-2
-          cores: '12'
-          memory: '51234'
+          cores: '15'
+          memory: '69632'
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
         related:
