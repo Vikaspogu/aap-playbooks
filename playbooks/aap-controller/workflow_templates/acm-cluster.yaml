@@ -108,6 +108,7 @@
         extra_data:
           vm_name: ocp-acm-1
           storage_type: lvm-nvme
+          proxmox_node_ip: '10.30.30.40'
           disk_size: '500'
         related:
           success_nodes:
@@ -132,6 +133,8 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-0
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []
       - identifier: Start VM Two
@@ -142,6 +145,8 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-1
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []
       - identifier: Start VM Three
@@ -152,5 +157,7 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-2
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []
