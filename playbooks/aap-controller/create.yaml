@@ -2,7 +2,7 @@
 - name: Create RHEL VM template
   ansible.builtin.import_playbook: '../proxmox/create-vm-template.yaml'
   vars:
-    id: 9000
+    id: 9001
     vm_name: rhel-9.3-cloudinit-template
 
 - name: Import CloudInit VM

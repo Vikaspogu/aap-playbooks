@@ -33,6 +33,7 @@
           memory: '69632'
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
+          storage_type: lvm-nvme
         related:
           success_nodes:
             - identifier: 'Mount ISO One'
@@ -48,6 +49,7 @@
           memory: '69632'
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
+          storage_type: lvm-nvme
         related:
           success_nodes:
             - identifier: 'Mount ISO Two'
@@ -63,6 +65,7 @@
           memory: '69632'
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
+          storage_type: lvm-nvme
         related:
           success_nodes:
             - identifier: 'Mount ISO Three'
@@ -96,6 +99,8 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-1
+          storage_type: lvm-nvme
+          disk_size: 500
         related:
           success_nodes:
             - identifier: 'Start VM Two'

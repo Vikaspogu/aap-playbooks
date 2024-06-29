@@ -1,11 +1,12 @@
 ---
 - name: Playbook to Create VM template
-  hosts: proxmox
+  hosts: pxm-odin
   gather_facts: false
   vars:
     rhel_down_version: '9.3'
     rhel_down_token_url: 'https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token'
     rhel_down_images_url: 'https://api.access.redhat.com/management/v1/images/rhel/{{ rhel_down_version }}/x86_64'
+    storageName: "{{'zfs-hhd' if datacenter.node == 'pxm-odin' else 'zfs-pxm'}}"
   vars_files:
     - ../../vars/proxmox.vault.yaml
   tasks:
@@ -74,13 +75,13 @@
           ansible.builtin.command: 'qm create {{ id }} --name {{ vm_name }} --memory 4096 --cores 2 --net0 virtio,bridge=vmbr0 --cpu cputype=max'
 
         - name: Import disk image
-          ansible.builtin.command: 'qm importdisk {{ id }} /tmp/{{ __rhel_down_images[0].filename }} zfs-pxm'
+          ansible.builtin.command: 'qm importdisk {{ id }} /tmp/{{ __rhel_down_images[0].filename }} {{storageName}}'
 
         - name: Configure VM to use imported image
-          ansible.builtin.command: 'qm set {{ id }} --scsihw virtio-scsi-pci --scsi0 zfs-pxm:vm-{{ id }}-disk-0'
+          ansible.builtin.command: 'qm set {{ id }} --scsihw virtio-scsi-pci --scsi0 {{storageName}}:vm-{{ id }}-disk-0'
 
         - name: Add cloud-init image as CDROM
-          ansible.builtin.command: 'qm set {{ id }} --ide2 zfs-pxm:cloudinit'
+          ansible.builtin.command: 'qm set {{ id }} --ide2 {{storageName}}:cloudinit'
 
         - name: Configure boot from the image
           ansible.builtin.command: 'qm set {{ id }} --boot c --bootdisk scsi0'
