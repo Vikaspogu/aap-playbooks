@@ -27,8 +27,8 @@
       community.general.proxmox_vm_info:
         api_user: '{{ datacenter.username }}@pve'
         api_password: '{{ datacenter.password }}'
-        api_host: '{{ datacenter.ip }}'
-        node: '{{ datacenter.node }}'
+        api_host: '{{ proxmox_node_ip }}'
+        node: '{{ proxmox_node }}'
         vmid: '{{ id }}'
       register: vm_info
       delegate_to: localhost

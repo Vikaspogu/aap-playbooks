@@ -34,6 +34,8 @@
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
           storage_type: lvm-nvme
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
             - identifier: 'Mount ISO One'
@@ -50,6 +52,8 @@
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
           storage_type: lvm-nvme
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
             - identifier: 'Mount ISO Two'
@@ -66,6 +70,8 @@
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
           storage_type: lvm-nvme
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
             - identifier: 'Mount ISO Three'
@@ -77,6 +83,7 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-0
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
             - identifier: 'Start VM One'
@@ -88,6 +95,7 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-1
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
             - identifier: 'Additional disk Two'
@@ -100,7 +108,7 @@
         extra_data:
           vm_name: ocp-acm-1
           storage_type: lvm-nvme
-          disk_size: 500
+          disk_size: '500'
         related:
           success_nodes:
             - identifier: 'Start VM Two'
@@ -112,6 +120,7 @@
           type: job_template
         extra_data:
           vm_name: ocp-acm-2
+          proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
             - identifier: 'Start VM Three'
