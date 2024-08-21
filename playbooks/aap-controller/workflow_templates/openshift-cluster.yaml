@@ -1,7 +1,7 @@
 ---
-- name: Create ACM cluster Workflow Template
+- name: Create OpenShift cluster Workflow Template
   awx.awx.workflow_job_template:
-    name: 'OpenShift - Create 3 Node ACM Cluster'
+    name: 'OpenShift - Create 5 Node Cluster'
     inventory: '{{ awx_inventory_name }}'
     controller_host: '{{ controller_hostname }}'
     controller_username: '{{ controller_username }}'
@@ -18,19 +18,21 @@
           redhat_pull_secret: '{{ redhat_pull_secret | string }}'
         related:
           success_nodes:
-            - identifier: 'Create VM One'
-            - identifier: 'Create VM Two'
-            - identifier: 'Create VM Three'
-      - identifier: Create VM One
+            - identifier: 'Create Master-0 VM'
+            - identifier: 'Create Master-1 VM'
+            - identifier: 'Create Master-2 VM'
+            - identifier: 'Create Worker-0 VM'
+            - identifier: 'Create Worker-1 VM'
+      - identifier: Create Master-0 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Create VM'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-0
-          cores: '15'
-          memory: '69632'
+          vm_name: master-0
+          cores: '13'
+          memory: '57344'
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
           storage_type: lvm-nvme
@@ -38,17 +40,17 @@
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
-            - identifier: 'Mount ISO One'
-      - identifier: Create VM Two
+            - identifier: 'Mount ISO on Master-0 VM'
+      - identifier: Create Master-1 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Create VM'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-1
-          cores: '15'
-          memory: '69632'
+          vm_name: master-1
+          cores: '13'
+          memory: '57344'
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
           storage_type: lvm-nvme
@@ -56,17 +58,17 @@
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
-            - identifier: 'Mount ISO Two'
-      - identifier: Create VM Three
+            - identifier: 'Mount ISO on Master-1 VM'
+      - identifier: Create Master-2 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Create VM'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-2
-          cores: '15'
-          memory: '69632'
+          vm_name: master-2
+          cores: '13'
+          memory: '57344'
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
           storage_type: lvm-nvme
@@ -74,90 +76,109 @@
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
-            - identifier: 'Mount ISO Three'
-      - identifier: Mount ISO One
+            - identifier: 'Mount ISO on Master-2 VM'
+      - identifier: Create Worker-0 VM
+        unified_job_template:
+          organization:
+            name: Default
+          name: 'Proxmox - Create VM'
+          type: job_template
+        extra_data:
+          vm_name: worker-0
+          cores: '8'
+          memory: '30720'
+          disk_size: '200'
+          mac_address: '52:50:56:11:22:44'
+          storage_type: lvm-nvme
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
+        related:
+          success_nodes:
+            - identifier: 'Mount ISO on Worker-0 VM'
+      - identifier: Create Worker-1 VM
+        unified_job_template:
+          organization:
+            name: Default
+          name: 'Proxmox - Create VM'
+          type: job_template
+        extra_data:
+          vm_name: worker-1
+          cores: '8'
+          memory: '30720'
+          disk_size: '200'
+          mac_address: '52:50:56:11:22:55'
+          storage_type: lvm-nvme
+          proxmox_node: proxmox
+          proxmox_node_ip: '10.30.30.40'
+        related:
+          success_nodes:
+            - identifier: 'Mount ISO on Worker-1 VM'
+      - identifier: Mount ISO on Master-0 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-0
+          vm_name: master-0
           proxmox_node_ip: '10.30.30.40'
         related:
-          success_nodes:
-            - identifier: 'Start VM One'
-      - identifier: Mount ISO Two
+          success_nodes: []
+      - identifier: Mount ISO on Master-1 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-1
+          vm_name: master-1
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes:
-            - identifier: 'Additional disk Two'
-      - identifier: Additional disk Two
+            - identifier: 'Additional disk on Master-1 VM'
+      - identifier: Additional disk on Master-1 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Attach additional disk to VM'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-1
+          vm_name: master-1
           storage_type: lvm-nvme
           proxmox_node_ip: '10.30.30.40'
           disk_size: '500'
         related:
-          success_nodes:
-            - identifier: 'Start VM Two'
-      - identifier: Mount ISO Three
+          success_nodes: []
+      - identifier: Mount ISO on Master-2 VM
         unified_job_template:
           organization:
             name: Default
           name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-2
-          proxmox_node_ip: '10.30.30.40'
-        related:
-          success_nodes:
-            - identifier: 'Start VM Three'
-      - identifier: Start VM One
-        unified_job_template:
-          organization:
-            name: Default
-          name: 'Proxmox - Start VM'
-          type: job_template
-        extra_data:
-          vm_name: ocp-acm-0
-          proxmox_node: proxmox
+          vm_name: master-2
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []
-      - identifier: Start VM Two
+      - identifier: Mount ISO on Worker-0 VM
         unified_job_template:
           organization:
             name: Default
-          name: 'Proxmox - Start VM'
+          name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-1
-          proxmox_node: proxmox
+          vm_name: worker-0
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []
-      - identifier: Start VM Three
+      - identifier: Mount ISO on Worker-1 VM
         unified_job_template:
           organization:
             name: Default
-          name: 'Proxmox - Start VM'
+          name: 'Proxmox - Mount ISO'
           type: job_template
         extra_data:
-          vm_name: ocp-acm-2
-          proxmox_node: proxmox
+          vm_name: worker-1
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []

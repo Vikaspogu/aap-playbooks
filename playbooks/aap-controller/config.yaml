@@ -87,29 +87,8 @@
       delay: 10
 
     - name: Create 3 node ACM cluster workflow
-      ansible.builtin.import_tasks: workflow_templates/acm-cluster.yaml
+      ansible.builtin.import_tasks: workflow_templates/openshift-cluster.yaml
       register: acm_cluster_workflow
       until: not acm_cluster_workflow.failed
-      retries: 10
-      delay: 10
-
-    - name: Create Dev1 SNO cluster workflow
-      ansible.builtin.import_tasks: workflow_templates/dev1-sno-cluster.yaml
-      register: sno_cluster_workflow
-      until: not sno_cluster_workflow.failed
-      retries: 10
-      delay: 10
-
-    - name: Create Dev2 SNO cluster workflow
-      ansible.builtin.import_tasks: workflow_templates/dev2-sno-cluster.yaml
-      register: sno_cluster_workflow
-      until: not sno_cluster_workflow.failed
-      retries: 10
-      delay: 10
-
-    - name: Create destroy cluster workflow
-      ansible.builtin.import_tasks: workflow_templates/destroy-cluster.yaml
-      register: destroy_cluster_workflow
-      until: not destroy_cluster_workflow.failed
       retries: 10
       delay: 10
