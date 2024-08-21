@@ -9,7 +9,7 @@
   tasks:
     - name: Provision bootstrapping argocd operator
       kubernetes.core.k8s:
-        definition: "{{ lookup('kubernetes.core.kustomize', dir='github.com/Vikaspogu/openshift-multicluster/kustomize/bases/openshift-gitops-operator') }}"
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='github.com/Vikaspogu/openshift-multicluster/kustomize/components/openshift-gitops-operator') }}"
 
     - name: Wait till the openshift-gitops-server pods is created
       kubernetes.core.k8s_info:
