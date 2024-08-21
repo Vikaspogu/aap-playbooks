@@ -20,3 +20,9 @@
         name: 'OpenShift - Prepare SNO Cluster ISO',
         file: playbooks/openshift/prepare-sno-iso.yaml,
       }
+    - {
+        name: 'OpenShift - ACM GitOps Bootstrap',
+        file: playbooks/openshift/acm-gitops-bootstrap.yaml,
+        enable_survey: true,
+        survey_file: '../openshift/surveys/acm-gitops-bootstrap.json',
+      }

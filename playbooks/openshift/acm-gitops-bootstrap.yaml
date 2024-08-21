@@ -37,21 +37,4 @@
 
     - name: Update openshift-gitops instance
       kubernetes.core.k8s:
-        definition: "{{ lookup('kubernetes.core.kustomize', dir='github.com/Vikaspogu/openshift-multicluster/kustomize/bases/openshift-gitops-config') }}"
-
-    - name: Wait till the openshift-gitops-server pods is created
-      kubernetes.core.k8s_info:
-        kind: Pod
-        namespace: openshift-gitops
-      register: pod_list
-      until: pod_list | json_query('resources[*].status.phase') | unique == ["Running"]
-      retries: 30
-      delay: 60
-
-    - name: Deploy argo-application chart from local path
-      kubernetes.core.helm:
-        name: argo-application
-        chart_ref: '/home/{{ ansible_user }}/openshift-multicluster/helm/charts/argo-application'
-        release_namespace: openshift-gitops
-        values:
-          clusterName: '{{ cluster_name }}'
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='github.com/Vikaspogu/openshift-multicluster/.bootstrap') }}"
