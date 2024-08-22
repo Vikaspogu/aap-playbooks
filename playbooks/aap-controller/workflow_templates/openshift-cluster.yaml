@@ -31,8 +31,8 @@
           type: job_template
         extra_data:
           vm_name: master-0
-          cores: '13'
-          memory: '57344'
+          cores: '10'
+          memory: '40960'
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
           storage_type: lvm-nvme
@@ -49,8 +49,8 @@
           type: job_template
         extra_data:
           vm_name: master-1
-          cores: '13'
-          memory: '57344'
+          cores: '10'
+          memory: '40960'
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
           storage_type: lvm-nvme
@@ -67,8 +67,8 @@
           type: job_template
         extra_data:
           vm_name: master-2
-          cores: '13'
-          memory: '57344'
+          cores: '10'
+          memory: '40960'
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
           storage_type: lvm-nvme
@@ -85,8 +85,8 @@
           type: job_template
         extra_data:
           vm_name: worker-0
-          cores: '8'
-          memory: '30720'
+          cores: '12'
+          memory: '62940'
           disk_size: '200'
           mac_address: '52:50:56:11:22:44'
           storage_type: lvm-nvme
@@ -103,8 +103,8 @@
           type: job_template
         extra_data:
           vm_name: worker-1
-          cores: '8'
-          memory: '30720'
+          cores: '12'
+          memory: '62940'
           disk_size: '200'
           mac_address: '52:50:56:11:22:55'
           storage_type: lvm-nvme
