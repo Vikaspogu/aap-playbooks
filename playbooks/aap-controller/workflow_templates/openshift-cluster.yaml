@@ -1,7 +1,7 @@
 ---
 - name: Create OpenShift cluster Workflow Template
   awx.awx.workflow_job_template:
-    name: 'OpenShift - Create 5 Node Cluster'
+    name: 'OpenShift - Create 3 Node Cluster'
     inventory: '{{ awx_inventory_name }}'
     controller_host: '{{ controller_hostname }}'
     controller_username: '{{ controller_username }}'
@@ -21,8 +21,6 @@
             - identifier: 'Create Master-0 VM'
             - identifier: 'Create Master-1 VM'
             - identifier: 'Create Master-2 VM'
-            - identifier: 'Create Worker-0 VM'
-            - identifier: 'Create Worker-1 VM'
       - identifier: Create Master-0 VM
         unified_job_template:
           organization:
@@ -31,8 +29,8 @@
           type: job_template
         extra_data:
           vm_name: master-0
-          cores: '10'
-          memory: '40960'
+          cores: '16'
+          memory: '71680'
           disk_size: '200'
           mac_address: '52:50:56:11:22:11'
           storage_type: lvm-nvme
@@ -49,8 +47,8 @@
           type: job_template
         extra_data:
           vm_name: master-1
-          cores: '10'
-          memory: '40960'
+          cores: '16'
+          memory: '71680'
           disk_size: '200'
           mac_address: '52:50:56:11:22:22'
           storage_type: lvm-nvme
@@ -67,8 +65,8 @@
           type: job_template
         extra_data:
           vm_name: master-2
-          cores: '10'
-          memory: '40960'
+          cores: '16'
+          memory: '71680'
           disk_size: '200'
           mac_address: '52:50:56:11:22:33'
           storage_type: lvm-nvme
@@ -77,42 +75,6 @@
         related:
           success_nodes:
             - identifier: 'Mount ISO on Master-2 VM'
-      - identifier: Create Worker-0 VM
-        unified_job_template:
-          organization:
-            name: Default
-          name: 'Proxmox - Create VM'
-          type: job_template
-        extra_data:
-          vm_name: worker-0
-          cores: '12'
-          memory: '62940'
-          disk_size: '200'
-          mac_address: '52:50:56:11:22:44'
-          storage_type: lvm-nvme
-          proxmox_node: proxmox
-          proxmox_node_ip: '10.30.30.40'
-        related:
-          success_nodes:
-            - identifier: 'Mount ISO on Worker-0 VM'
-      - identifier: Create Worker-1 VM
-        unified_job_template:
-          organization:
-            name: Default
-          name: 'Proxmox - Create VM'
-          type: job_template
-        extra_data:
-          vm_name: worker-1
-          cores: '12'
-          memory: '62940'
-          disk_size: '200'
-          mac_address: '52:50:56:11:22:55'
-          storage_type: lvm-nvme
-          proxmox_node: proxmox
-          proxmox_node_ip: '10.30.30.40'
-        related:
-          success_nodes:
-            - identifier: 'Mount ISO on Worker-1 VM'
       - identifier: Mount ISO on Master-0 VM
         unified_job_template:
           organization:
@@ -157,28 +119,6 @@
           type: job_template
         extra_data:
           vm_name: master-2
-          proxmox_node_ip: '10.30.30.40'
-        related:
-          success_nodes: []
-      - identifier: Mount ISO on Worker-0 VM
-        unified_job_template:
-          organization:
-            name: Default
-          name: 'Proxmox - Mount ISO'
-          type: job_template
-        extra_data:
-          vm_name: worker-0
-          proxmox_node_ip: '10.30.30.40'
-        related:
-          success_nodes: []
-      - identifier: Mount ISO on Worker-1 VM
-        unified_job_template:
-          organization:
-            name: Default
-          name: 'Proxmox - Mount ISO'
-          type: job_template
-        extra_data:
-          vm_name: worker-1
           proxmox_node_ip: '10.30.30.40'
         related:
           success_nodes: []
