@@ -7,9 +7,9 @@
   tasks:
     - name: Start a VM
       community.general.proxmox_kvm:
-        node: '{{ proxmox_node }}'
+        node: '{{ datacenter.node }}'
         api_user: '{{ datacenter.username }}@pve'
         api_password: '{{ datacenter.password }}'
-        api_host: '{{ proxmox_node_ip }}'
+        api_host: '{{ datacenter.ip }}'
         name: '{{ vm_name }}'
         state: started

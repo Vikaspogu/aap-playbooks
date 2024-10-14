@@ -11,12 +11,12 @@
     - ../../vars/aap-inventory.vault.yaml
   tasks:
     - name: Create an inventory
-      awx.awx.inventory:
+      ansible.controller.inventory:
         name: '{{ awx_inventory_name }}'
         organization: Default
 
     - name: Machine Credentials
-      awx.awx.credential:
+      ansible.controller.credential:
         name: Host Credentials
         credential_type: Machine
         organization: Default
@@ -26,7 +26,7 @@
           ssh_key_data: "{{ lookup('file', '/Users/vikaspogu/.ssh/id_rsa') }}"
 
     - name: Quay Credentials
-      awx.awx.credential:
+      ansible.controller.credential:
         name: Quay Credentials
         credential_type: Container Registry
         organization: Default
@@ -36,7 +36,7 @@
           password: '{{ quay_password }}'
 
     - name: Ansible Vault Credentials
-      awx.awx.credential:
+      ansible.controller.credential:
         name: Vault Credentials
         credential_type: Vault
         organization: Default
@@ -44,13 +44,13 @@
           vault_password: '{{ vault_password }}'
 
     - name: Add EE to the controller instance
-      awx.awx.execution_environment:
+      ansible.controller.execution_environment:
         name: 'Custom EE'
         image: quay.io/rhn_gps_vpogu/custom-aap24-ee-rhel8@sha256:f621dfc4ebaf5539e58f5718677d784a366e191eb06021d1f69fd8c01f175fc0
         credential: 'Quay Credentials'
 
     - name: '{{ awx_project_name }}'
-      awx.awx.project:
+      ansible.controller.project:
         name: '{{ awx_project_name }}'
         organization: Default
         state: present
@@ -61,7 +61,7 @@
         scm_url: https://github.com/Vikaspogu/homelab-playbooks.git
 
     - name: Add inventory source to inventory
-      awx.awx.inventory_source:
+      ansible.controller.inventory_source:
         name: 'scm-inventory'
         description: Source for inventory
         inventory: '{{ awx_inventory_name }}'

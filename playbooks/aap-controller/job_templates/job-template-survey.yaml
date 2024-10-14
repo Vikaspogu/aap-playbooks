@@ -1,6 +1,6 @@
 ---
 - name: Create a Job Template with Survey
-  awx.awx.job_template:
+  ansible.controller.job_template:
     name: '{{ item.name }}'
     organization: Default
     state: present

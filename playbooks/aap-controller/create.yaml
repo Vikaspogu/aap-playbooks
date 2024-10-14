@@ -26,7 +26,7 @@
   tasks:
     - name: Wait 600 seconds for target connection to become reachable/usable
       ansible.builtin.wait_for_connection:
-        delay: 30
+        delay: 10
         timeout: 600
 
 - name: Download and install AAP on the controller
@@ -92,7 +92,7 @@
       failed_when: repository_path.rc != 0
 
     - name: Set the license using a file
-      awx.awx.license:
+      ansible.controller.license:
         controller_host: '{{ controller_hostname }}'
         controller_username: '{{ controller_username }}'
         controller_password: '{{ controller_password }}'
