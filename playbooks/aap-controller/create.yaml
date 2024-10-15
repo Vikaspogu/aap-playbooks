@@ -11,8 +11,8 @@
     vm_name: aap-controller
     template_name: rhel-9.3-cloudinit-template
     mac_address: bc:24:11:a0:6e:7a
-    cores: 4
-    memory: 16384
+    cores: 8
+    memory: 20480
     disk_size: 212G
 
 - name: Start AAP VM
