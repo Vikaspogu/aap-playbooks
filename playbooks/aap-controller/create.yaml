@@ -64,10 +64,10 @@
 
   post_tasks:
     - name: Create sops directory
-      become_user: awx
+      become_user: vikaspogu
       become: true
       ansible.builtin.file:
-        path: /var/lib/awx/.sops-key
+        path: '/home/vikaspogu/aap/controller/.sops-key'
         state: directory
         mode: '0644'
 
@@ -76,10 +76,8 @@
       become_user: root
       ansible.builtin.copy:
         src: '/Users/vikaspogu/.config/sops/age/keys.txt'
-        dest: '/var/lib/awx/.sops-key/keys.txt'
+        dest: '/home/vikaspogu/aap/controller/.sops-key/keys.txt'
         mode: '0644'
-        owner: awx
-        group: awx
 
     - name: Get absolute path to this Git repository # noqa: command-instead-of-module
       ansible.builtin.command: git rev-parse --show-toplevel
