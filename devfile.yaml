@@ -1,6 +1,6 @@
 schemaVersion: 2.2.0
 metadata:
-  name: ansible-demo
+  name: aap-playbooks
 components:
   - name: tooling-container
     container:
