@@ -4,7 +4,7 @@ metadata:
 components:
   - name: tooling-container
     container:
-      image: quay.io/rhn_gps_vpogu/ansible-creator-ee@sha256:e908166e37a6d126fa6b9816ecb47076362d1798ac8acd5160d80281fba670f4
+      image: quay.io/rhn_gps_vpogu/ansible-creator-ee@sha256:169561b14529f1d487a78935db14d7426a9fde7cac7d5fee2fa60f413f8999cf
       memoryRequest: 256M
       memoryLimit: 6Gi
       cpuRequest: 250m
@@ -14,15 +14,6 @@ components:
         - name: 'ANSIBLE_COLLECTIONS_PATH'
           value: '~/.ansible/collections:/usr/share/ansible/collections:/projects/ansible-devspaces-demo/collections'
 commands:
-  - id: oc-install
-    exec:
-      commandLine: '/usr/local/bin/ansible-playbook ${PROJECT_SOURCE}/playbooks/install_oc.yml'
-      workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: build
-        isDefault: true
-      component: tooling-container
-
   - id: molecule-create
     exec:
       label: '1.Molecule: start a test pod for the automation'
@@ -96,7 +87,5 @@ commands:
       component: tooling-container
 
 events:
-  postStart:
-    - 'oc-install'
   preStop:
     - 'molecule-destroy'
