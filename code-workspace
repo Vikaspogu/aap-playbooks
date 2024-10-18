@@ -1,0 +1,31 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "name": "aap-playbooks",
+            "path": "/projects/aap-playbooks"
+        }
+    ],
+    "extensions": {
+        "recommendations": [
+            "redhat.vscode-yaml",
+            "mhutchie.git-graph",
+            "eamodio.gitlens",
+            "redhat.ansible",
+            "catppuccin.catppuccin-vsc"
+        ]
+    },
+    "settings": {
+        "workbench.colorTheme": "Catppuccin Frappe",
+        "editor.wordWrap": "on",
+        "files.autoSave": "off",
+        "editor.semanticHighlighting.enabled": true,
+        "terminal.integrated.minimumContrastRatio": 1,
+        "window.titleBarStyle": "custom",
+        "gopls": {
+            "ui.semanticTokens": true
+        }
+    }
+}
