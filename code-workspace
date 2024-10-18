@@ -19,8 +19,9 @@
     },
     "settings": {
         "workbench.colorTheme": "Catppuccin Frappé",
-        "editor.wordWrap": "on",
+        "editor.fontFamily": "'CaskaydiaCove Nerd Font'",
         "editor.tabSize": 2,
+        "editor.wordWrap": "on",
         "files.autoSave": "off",
         "editor.semanticHighlighting.enabled": true,
         "terminal.integrated.minimumContrastRatio": 1,
